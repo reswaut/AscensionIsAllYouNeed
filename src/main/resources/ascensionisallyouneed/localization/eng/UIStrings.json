@@ -1,0 +1,90 @@
+{
+  "ascensionisallyouneed:AscensionModeDescriptions": {
+    "TEXT": [
+      "[MISSING_ASCENSION_DESCRIPTION]",
+      "(Max Level) "
+    ],
+    "EXTRA_TEXT": [
+      "20. Double Boss."
+    ]
+  },
+  "ascensionisallyouneed:Settings": {
+    "TEXT": [
+      "Directly unlock highest Ascension Level"
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:PoorElitesAscension": {
+    "TEXT": [
+      "Poor Elites."
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:DangerousEnemiesAscension": {
+    "TEXT": [
+      "Some normal enemies are more dangerous."
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:FewerPotionsAscension": {
+    "TEXT": [
+      "Potions appear less often."
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:LessRestHealAscension": {
+    "TEXT": [
+      "Heal less when you rest."
+    ],
+    "EXTRA_TEXT": [
+      "Heal for 80%% of your Max HP (%d).",
+      "Heal for 24%% of your Max HP (%d)."
+    ]
+  },
+  "ascensionisallyouneed:LessStartingGoldAscension": {
+    "TEXT": [
+      "Start each run with less gold."
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:UnfavorableMapsAscension": {
+    "TEXT": [
+      "Unfavorable maps."
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:FewerRareRelicsAscension": {
+    "TEXT": [
+      "Rare relics appear less often."
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:FewerRarePotionsAscension": {
+    "TEXT": [
+      "Rare potions appear less often."
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:FewerRareCardsAscension": {
+    "TEXT": [
+      "Rare cards appear less often."
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:ExtraCursedAscension": {
+    "TEXT": [
+      "Start each run extra cursed."
+    ],
+    "EXTRA_TEXT": [
+    ]
+  }
+}

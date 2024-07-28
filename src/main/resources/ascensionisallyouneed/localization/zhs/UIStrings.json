@@ -1,0 +1,90 @@
+{
+  "ascensionisallyouneed:AscensionModeDescriptions": {
+    "TEXT": [
+      "[MISSING_ASCENSION_DESCRIPTION]",
+      "（最大等级） "
+    ],
+    "EXTRA_TEXT": [
+      "20. 双重Boss。"
+    ]
+  },
+  "ascensionisallyouneed:Settings": {
+    "TEXT": [
+      "直接解锁最高进阶"
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:PoorElitesAscension": {
+    "TEXT": [
+      "精英变穷。"
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:DangerousEnemiesAscension": {
+    "TEXT": [
+      "有些普通敌人更加危险。"
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:FewerPotionsAscension": {
+    "TEXT": [
+      "药水出现频率下降。"
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:LessRestHealAscension": {
+    "TEXT": [
+      "休息时生命恢复减少。"
+    ],
+    "EXTRA_TEXT": [
+      "回复你最大生命的 80%% (%d)。",
+      "回复你最大生命的 24%% (%d)。"
+    ]
+  },
+  "ascensionisallyouneed:LessStartingGoldAscension": {
+    "TEXT": [
+      "初始拥有更少金币。"
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:UnfavorableMapsAscension": {
+    "TEXT": [
+      "地图变得更加不利。"
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:FewerRareRelicsAscension": {
+    "TEXT": [
+      "稀有遗物出现频率下降。"
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:FewerRarePotionsAscension": {
+    "TEXT": [
+      "稀有药水出现频率下降。"
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:FewerRareCardsAscension": {
+    "TEXT": [
+      "稀有卡牌出现频率下降。"
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "ascensionisallyouneed:ExtraCursedAscension": {
+    "TEXT": [
+      "初始受到的诅咒升级。"
+    ],
+    "EXTRA_TEXT": [
+    ]
+  }
+}
