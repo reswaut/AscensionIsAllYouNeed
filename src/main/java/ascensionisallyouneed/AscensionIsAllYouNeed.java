@@ -1,14 +1,11 @@
 package ascensionisallyouneed;
 
 import ascensionisallyouneed.ascensions.AbstractAscension;
-import basemod.AutoAdd;
-import basemod.BaseMod;
-import basemod.ModLabeledButton;
-import basemod.ModPanel;
-import basemod.interfaces.EditStringsSubscriber;
-import basemod.interfaces.PostInitializeSubscriber;
 import ascensionisallyouneed.util.GeneralUtils;
 import ascensionisallyouneed.util.TextureLoader;
+import basemod.*;
+import basemod.interfaces.EditStringsSubscriber;
+import basemod.interfaces.PostInitializeSubscriber;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.backends.lwjgl.LwjglFileHandle;
 import com.badlogic.gdx.files.FileHandle;
@@ -22,7 +19,8 @@ import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.FontHelper;
-import com.megacrit.cardcrawl.localization.*;
+import com.megacrit.cardcrawl.localization.CardStrings;
+import com.megacrit.cardcrawl.localization.UIStrings;
 import com.megacrit.cardcrawl.screens.charSelect.CharacterSelectScreen;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -98,7 +96,11 @@ public class AscensionIsAllYouNeed implements
         String[] SettingText = CardCrawlGame.languagePack.getUIString(AscensionIsAllYouNeed.makeID("Settings")).TEXT;
         Texture badgeTexture = TextureLoader.getTexture(imagePath("badge.png"));
         settingsPanel = new ModPanel();
-        ModLabeledButton unlockAscensionsButton = new ModLabeledButton(SettingText[0], 350.0f, 500.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
+        ModLabel warningLabel = new ModLabel(SettingText[0], 350.0f, 650.0f, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
+                (label) -> {
+                });
+        settingsPanel.addUIElement(warningLabel);
+        ModLabeledButton unlockAscensionsButton = new ModLabeledButton(SettingText[1], 350.0f, 550.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
             (button) -> {
                 int newAscensionLevel = AscensionIsAllYouNeed.maxAscension;
                 for (AbstractPlayer character : CardCrawlGame.characterManager.getAllCharacters()) {
@@ -108,6 +110,20 @@ public class AscensionIsAllYouNeed implements
                 }
             });
         settingsPanel.addUIElement(unlockAscensionsButton);
+        ModLabeledButton removeHistoryButton = new ModLabeledButton(SettingText[2], 350.0f, 450.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
+                (button) -> {
+                    for (AbstractPlayer character : CardCrawlGame.characterManager.getAllCharacters()) {
+                        character.loadPrefs();
+                        if (character.getPrefs().getInteger("ASCENSION_LEVEL") > 20) {
+                            character.getPrefs().putInteger("ASCENSION_LEVEL", 20);
+                        }
+                        character.getPrefs().putInteger("LAST_ASCENSION_LEVEL", 1);
+                        character.getPrefs().data.remove("ascensionisallyouneed:ASCENSION_LEVEL");
+                        character.getPrefs().data.remove("ascensionisallyouneed:LAST_ASCENSION_LEVEL");
+                        character.getPrefs().flush();
+                    }
+                });
+        settingsPanel.addUIElement(removeHistoryButton);
         BaseMod.registerModBadge(badgeTexture, info.Name, GeneralUtils.arrToString(info.Authors), info.Description, settingsPanel);
     }
 

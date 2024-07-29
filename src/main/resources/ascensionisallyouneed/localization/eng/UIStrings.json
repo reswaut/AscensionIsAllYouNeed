@@ -10,7 +10,9 @@
   },
   "ascensionisallyouneed:Settings": {
     "TEXT": [
-      "Directly unlock highest Ascension Level"
+      "WARNING: The following operations are destructive to your Ascension progress.\nThey are also likely to cause issues if you have a saved run. Click with caution.",
+      "Unlock highest Ascension Level for ALL characters",
+      "Erase ALL Ascension progress saved by this mod"
     ],
     "EXTRA_TEXT": [
     ]
