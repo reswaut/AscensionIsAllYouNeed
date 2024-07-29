@@ -8,12 +8,10 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.map.MapRoomNode;
 import com.megacrit.cardcrawl.rooms.AbstractRoom;
 import com.megacrit.cardcrawl.rooms.MonsterRoom;
-import com.megacrit.cardcrawl.rooms.MonsterRoomBoss;
 import com.megacrit.cardcrawl.rooms.MonsterRoomElite;
 
 import java.util.ArrayList;
 
-import static com.megacrit.cardcrawl.dungeons.AbstractDungeon.currMapNode;
 import static com.megacrit.cardcrawl.dungeons.AbstractDungeon.mapRng;
 
 public class DangerousEnemiesAscension extends AbstractAscension {
@@ -43,7 +41,7 @@ public class DangerousEnemiesAscension extends AbstractAscension {
         if (normalEnemyNodes.isEmpty()) {
             return;
         }
-        int burningCount = (normalEnemyNodes.size() - 1) / mapRng.random(5, 10) + 1;
+        int burningCount = (normalEnemyNodes.size() - 1) / mapRng.random(6, 10) + 1;
         while (burningCount > 0) {
             burningCount -= 1;
             MapRoomNode chosenNode = normalEnemyNodes.get(mapRng.random(0, normalEnemyNodes.size() - 1));
@@ -57,5 +55,13 @@ public class DangerousEnemiesAscension extends AbstractAscension {
             return Math.round(gold * 1.5F);
         }
         return gold;
+    }
+
+    @Override
+    public int modifyCardChance(int chance) {
+        if (MapRoomNodePatch.IsBurningField.isBurning.get(AbstractDungeon.getCurrMapNode()) && !Settings.isDailyRun) {
+            return chance - 3;
+        }
+        return chance;
     }
 }

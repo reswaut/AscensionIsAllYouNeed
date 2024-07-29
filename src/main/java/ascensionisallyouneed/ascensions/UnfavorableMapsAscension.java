@@ -50,10 +50,18 @@ public class UnfavorableMapsAscension extends AbstractAscension {
             return;
         }
         int maxWidth = normalEnemyNodesByWidth.size() - 1;
-        int burningCount = (normalEnemyCount - 1) / mapRng.random(5, 10) + 1;
-        for (int i = 1; i <= maxWidth; ++i) {
+        int burningCount = (normalEnemyCount - 1) / mapRng.random(6, 10) + 1;
+        for (int i = 1; i < maxWidth; ++i) {
+            for (int j = 1; j < normalEnemyNodesByWidth.get(i).size(); ++j) {
+                int index = mapRng.random(0, j);
+                if (index != j) {
+                    MapRoomNode node = normalEnemyNodesByWidth.get(i).get(j);
+                    normalEnemyNodesByWidth.get(i).set(j, normalEnemyNodesByWidth.get(i).get(index));
+                    normalEnemyNodesByWidth.get(i).set(index, node);
+                }
+            }
             for (MapRoomNode node : normalEnemyNodesByWidth.get(i)) {
-                if (mapRng.random(1, maxWidth) >= i) {
+                if (mapRng.random(1, maxWidth) > i) {
                     MapRoomNodePatch.IsBurningField.isBurning.set(node, true);
                     burningCount -= 1;
                     if (burningCount <= 0) {
