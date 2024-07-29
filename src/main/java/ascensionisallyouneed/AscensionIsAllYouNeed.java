@@ -96,11 +96,28 @@ public class AscensionIsAllYouNeed implements
         String[] SettingText = CardCrawlGame.languagePack.getUIString(AscensionIsAllYouNeed.makeID("Settings")).TEXT;
         Texture badgeTexture = TextureLoader.getTexture(imagePath("badge.png"));
         settingsPanel = new ModPanel();
-        ModLabel warningLabel = new ModLabel(SettingText[0], 350.0f, 650.0f, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
+        ModLabel warningLabel = new ModLabel(SettingText[0], 350.0f, 700.0f, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
                 (label) -> {
                 });
         settingsPanel.addUIElement(warningLabel);
-        ModLabeledButton unlockAscensionsButton = new ModLabeledButton(SettingText[1], 350.0f, 550.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
+        ModLabeledButton unlockAscension21Button = new ModLabeledButton(SettingText[1], 350.0f, 600.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
+                (button) -> {
+                    int newAscensionLevel = AscensionIsAllYouNeed.maxAscension;
+                    if (newAscensionLevel <= 20) {
+                        return;
+                    }
+                    for (AbstractPlayer character : CardCrawlGame.characterManager.getAllCharacters()) {
+                        character.loadPrefs();
+                        if (character.getPrefs().getInteger("ASCENSION_LEVEL", 1) == 20
+                                && character.getPrefs().getInteger("ascensionisallyouneed:ASCENSION_LEVEL", 1) <= 20) {
+                            character.getPrefs().putInteger("ascensionisallyouneed:ASCENSION_LEVEL", 21);
+                            character.getPrefs().putInteger("ascensionisallyouneed:LAST_ASCENSION_LEVEL", 21);
+                            character.getPrefs().flush();
+                        }
+                    }
+                });
+        settingsPanel.addUIElement(unlockAscension21Button);
+        ModLabeledButton unlockHighestAscensionButton = new ModLabeledButton(SettingText[2], 350.0f, 500.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
             (button) -> {
                 int newAscensionLevel = AscensionIsAllYouNeed.maxAscension;
                 for (AbstractPlayer character : CardCrawlGame.characterManager.getAllCharacters()) {
@@ -109,12 +126,12 @@ public class AscensionIsAllYouNeed implements
                     character.getPrefs().flush();
                 }
             });
-        settingsPanel.addUIElement(unlockAscensionsButton);
-        ModLabeledButton removeHistoryButton = new ModLabeledButton(SettingText[2], 350.0f, 450.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
+        settingsPanel.addUIElement(unlockHighestAscensionButton);
+        ModLabeledButton removeHistoryButton = new ModLabeledButton(SettingText[3], 350.0f, 400.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
                 (button) -> {
                     for (AbstractPlayer character : CardCrawlGame.characterManager.getAllCharacters()) {
                         character.loadPrefs();
-                        if (character.getPrefs().getInteger("ASCENSION_LEVEL") > 20) {
+                        if (character.getPrefs().getInteger("ASCENSION_LEVEL", 1) > 20) {
                             character.getPrefs().putInteger("ASCENSION_LEVEL", 20);
                         }
                         character.getPrefs().putInteger("LAST_ASCENSION_LEVEL", 1);
