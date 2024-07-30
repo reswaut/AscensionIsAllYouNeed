@@ -36,6 +36,10 @@ public class AbstractAscension implements Comparable<AbstractAscension> {
     }
     public void modifyStartingDeck(CardGroup masterDeck) {}
 
+    public int modifyNumberOfCardsInReward(int numCards) {
+        return numCards;
+    }
+
     @Override
     public int compareTo(AbstractAscension o) {
         return this.getAscensionLevel() - o.getAscensionLevel();

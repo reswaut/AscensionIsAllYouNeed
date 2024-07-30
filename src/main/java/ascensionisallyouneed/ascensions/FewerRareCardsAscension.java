@@ -1,10 +1,10 @@
 package ascensionisallyouneed.ascensions;
 
 import ascensionisallyouneed.AscensionIsAllYouNeed;
-import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
-import com.megacrit.cardcrawl.potions.AbstractPotion;
-import com.megacrit.cardcrawl.rooms.AbstractRoom;
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.rooms.MonsterRoomBoss;
+import com.megacrit.cardcrawl.rooms.MonsterRoomElite;
 
 public class FewerRareCardsAscension extends AbstractAscension {
     public static final String ID = AscensionIsAllYouNeed.makeID(FewerRareCardsAscension.class.getSimpleName());
@@ -22,6 +22,17 @@ public class FewerRareCardsAscension extends AbstractAscension {
 
     @Override
     public int modifyCardChance(int chance) {
-        return chance + 5;
+        return chance + AscensionIsAllYouNeed.rareCardProb;
+    }
+
+    @Override
+    public int modifyNumberOfCardsInReward(int numCards) {
+        if (AbstractDungeon.getCurrRoom() instanceof MonsterRoomElite) {
+            return numCards + AscensionIsAllYouNeed.additionalCardInElite;
+        }
+        if (AbstractDungeon.getCurrRoom() instanceof MonsterRoomBoss) {
+            return numCards + AscensionIsAllYouNeed.additionalCardInBoss;
+        }
+        return numCards;
     }
 }

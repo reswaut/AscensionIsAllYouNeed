@@ -6,7 +6,6 @@ import ascensionisallyouneed.ascensions.ModifyChestTierRollAscension;
 import ascensionisallyouneed.ascensions.ModifyPotionTierRollAscension;
 import ascensionisallyouneed.ascensions.ModifyRelicTierRollAscension;
 import com.evacipated.cardcrawl.modthespire.lib.*;
-import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.ModHelper;
@@ -154,8 +153,6 @@ public class AbstractDungeonPatch {
         }
     }
 
-
-
     @SpirePatch(
             clz = AbstractDungeon.class,
             method = "dungeonTransitionSetup"
@@ -177,6 +174,33 @@ public class AbstractDungeonPatch {
             @Override
             public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
                 Matcher finalMatcher = new Matcher.FieldAccessMatcher(CardCrawlGame.class, "playtime");
+                return LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
+            }
+        }
+    }
+
+    @SpirePatch(
+            clz = AbstractDungeon.class,
+            method = "getRewardCards"
+    )
+    public static class InsertGetRewardCards {
+        @SpireInsertPatch(
+                locator = Locator.class,
+                localvars = {"numCards"}
+        )
+        public static void Insert(@ByRef int[] numCards) {
+            int ascensionLevel = AbstractDungeon.ascensionLevel;
+            for (AbstractAscension ascension : AscensionIsAllYouNeed.ascensions) {
+                if (ascensionLevel >= ascension.getAscensionLevel()) {
+                    numCards[0] = ascension.modifyNumberOfCardsInReward(numCards[0]);
+                }
+            }
+        }
+
+        private static class Locator extends SpireInsertLocator {
+            @Override
+            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
+                Matcher finalMatcher = new Matcher.MethodCallMatcher(ModHelper.class, "isModEnabled");
                 return LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
             }
         }

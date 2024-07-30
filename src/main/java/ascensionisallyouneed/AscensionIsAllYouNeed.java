@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.evacipated.cardcrawl.modthespire.Loader;
 import com.evacipated.cardcrawl.modthespire.ModInfo;
 import com.evacipated.cardcrawl.modthespire.Patcher;
+import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
@@ -26,6 +27,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.scannotation.AnnotationDB;
 
+import java.io.IOException;
 import java.util.*;
 
 @SpireInitializer
@@ -40,6 +42,9 @@ public class AscensionIsAllYouNeed implements
     public static int maxAscension = 20;
     public static ArrayList<AbstractAscension> ascensions = new ArrayList<>();
     private ModPanel settingsPanel;
+    public static String FILE_NAME = "AscensionIsAllYouNeedConfig";
+    public static SpireConfig ascensionIsAllYouNeedConfig;
+    public static int rareCardProb = 5, additionalCardInElite = 0, additionalCardInBoss = 0;
 
     //This is used to prefix the IDs of various objects like cards and relics,
     //to avoid conflicts between different mods using the same name for things.
@@ -55,6 +60,20 @@ public class AscensionIsAllYouNeed implements
     public AscensionIsAllYouNeed() {
         BaseMod.subscribe(this); //This will make BaseMod trigger all the subscribers at their appropriate times.
         logger.info("{} subscribed to BaseMod.", modID);
+        Properties defaultSettings = new Properties();
+        defaultSettings.setProperty("rareCardProb", String.valueOf(rareCardProb));
+        defaultSettings.setProperty("additionalCardInElite", String.valueOf(additionalCardInElite));
+        defaultSettings.setProperty("additionalCardInBoss", String.valueOf(additionalCardInBoss));
+
+        try {
+            ascensionIsAllYouNeedConfig = new SpireConfig(modID, FILE_NAME, defaultSettings);
+            rareCardProb = ascensionIsAllYouNeedConfig.getInt("rareCardProb");
+            additionalCardInElite = ascensionIsAllYouNeedConfig.getInt("additionalCardInElite");
+            additionalCardInBoss = ascensionIsAllYouNeedConfig.getInt("additionalCardInBoss");
+        } catch (IOException e) {
+            logger.error("Card Augments SpireConfig initialization failed:");
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -96,11 +115,69 @@ public class AscensionIsAllYouNeed implements
         String[] SettingText = CardCrawlGame.languagePack.getUIString(AscensionIsAllYouNeed.makeID("Settings")).TEXT;
         Texture badgeTexture = TextureLoader.getTexture(imagePath("badge.png"));
         settingsPanel = new ModPanel();
-        ModLabel warningLabel = new ModLabel(SettingText[0], 350.0f, 700.0f, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
+
+        ModLabel rareCardProbLabel = new ModLabel(SettingText[0], 350.0f, 750.0f, Settings.CREAM_COLOR, FontHelper.charDescFont, settingsPanel,
+                (label) -> {
+                });
+        settingsPanel.addUIElement(rareCardProbLabel);
+
+        float rareCardProbSliderOffset = FontHelper.getWidth(FontHelper.charDescFont, SettingText[0], 1.0F / Settings.scale) + 40.0F;
+        ModMinMaxSlider rareCardProbSlider = new ModMinMaxSlider("", 350.0f + rareCardProbSliderOffset, 750.0f + 7.0F, 1.0F, 5.0F,
+                (float) ascensionIsAllYouNeedConfig.getInt("rareCardProb"), "%.0f%%", settingsPanel, (slider) -> {
+            ascensionIsAllYouNeedConfig.setInt("rareCardProb", Math.round(slider.getValue()));
+            rareCardProb = Math.round(slider.getValue());
+
+            try {
+                ascensionIsAllYouNeedConfig.save();
+            } catch (IOException var2) {
+                var2.printStackTrace();
+            }
+        });
+        settingsPanel.addUIElement(rareCardProbSlider);
+
+        ModLabel additionalCardInEliteLabel = new ModLabel(SettingText[1], 350.0f, 700.0f, Settings.CREAM_COLOR, FontHelper.charDescFont, settingsPanel,
+                (label) -> {
+                });
+        settingsPanel.addUIElement(additionalCardInEliteLabel);
+
+        float additionalCardInEliteSliderOffset = FontHelper.getWidth(FontHelper.charDescFont, SettingText[1], 1.0F / Settings.scale) + 40.0F;
+        ModMinMaxSlider additionalCardInEliteSlider = new ModMinMaxSlider("", 350.0f + additionalCardInEliteSliderOffset, 700.0f + 7.0F, 0.0F, 2.0F,
+                (float) ascensionIsAllYouNeedConfig.getInt("additionalCardInElite"), "%.0f", settingsPanel, (slider) -> {
+            ascensionIsAllYouNeedConfig.setInt("additionalCardInElite", Math.round(slider.getValue()));
+            additionalCardInElite = Math.round(slider.getValue());
+
+            try {
+                ascensionIsAllYouNeedConfig.save();
+            } catch (IOException var2) {
+                var2.printStackTrace();
+            }
+        });
+        settingsPanel.addUIElement(additionalCardInEliteSlider);
+
+        ModLabel additionalCardInBossLabel = new ModLabel(SettingText[2], 350.0f, 650.0f, Settings.CREAM_COLOR, FontHelper.charDescFont, settingsPanel,
+                (label) -> {
+                });
+        settingsPanel.addUIElement(additionalCardInBossLabel);
+
+        float additionalCardInBossSliderOffset = FontHelper.getWidth(FontHelper.charDescFont, SettingText[2], 1.0F / Settings.scale) + 40.0F;
+        ModMinMaxSlider additionalCardInBossSlider = new ModMinMaxSlider("", 350.0f + additionalCardInBossSliderOffset, 650.0f + 7.0F, 0.0F, 2.0F,
+                (float) ascensionIsAllYouNeedConfig.getInt("additionalCardInBoss"), "%.0f", settingsPanel, (slider) -> {
+            ascensionIsAllYouNeedConfig.setInt("additionalCardInBoss", Math.round(slider.getValue()));
+            additionalCardInBoss = Math.round(slider.getValue());
+
+            try {
+                ascensionIsAllYouNeedConfig.save();
+            } catch (IOException var2) {
+                var2.printStackTrace();
+            }
+        });
+        settingsPanel.addUIElement(additionalCardInBossSlider);
+
+        ModLabel warningLabel = new ModLabel(SettingText[3], 350.0f, 550.0f, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
                 (label) -> {
                 });
         settingsPanel.addUIElement(warningLabel);
-        ModLabeledButton unlockAscension21Button = new ModLabeledButton(SettingText[1], 350.0f, 600.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
+        ModLabeledButton unlockAscension21Button = new ModLabeledButton(SettingText[4], 350.0f, 450.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
                 (button) -> {
                     int newAscensionLevel = AscensionIsAllYouNeed.maxAscension;
                     if (newAscensionLevel <= 20) {
@@ -117,7 +194,7 @@ public class AscensionIsAllYouNeed implements
                     }
                 });
         settingsPanel.addUIElement(unlockAscension21Button);
-        ModLabeledButton unlockHighestAscensionButton = new ModLabeledButton(SettingText[2], 350.0f, 500.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
+        ModLabeledButton unlockHighestAscensionButton = new ModLabeledButton(SettingText[5], 350.0f, 350.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
             (button) -> {
                 int newAscensionLevel = AscensionIsAllYouNeed.maxAscension;
                 for (AbstractPlayer character : CardCrawlGame.characterManager.getAllCharacters()) {
@@ -127,7 +204,7 @@ public class AscensionIsAllYouNeed implements
                 }
             });
         settingsPanel.addUIElement(unlockHighestAscensionButton);
-        ModLabeledButton removeHistoryButton = new ModLabeledButton(SettingText[3], 350.0f, 400.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
+        ModLabeledButton removeHistoryButton = new ModLabeledButton(SettingText[6], 350.0f, 250.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
                 (button) -> {
                     for (AbstractPlayer character : CardCrawlGame.characterManager.getAllCharacters()) {
                         character.loadPrefs();
