@@ -44,7 +44,7 @@ public class AscensionIsAllYouNeed implements
     private ModPanel settingsPanel;
     public static String FILE_NAME = "AscensionIsAllYouNeedConfig";
     public static SpireConfig ascensionIsAllYouNeedConfig;
-    public static int rareCardProb = 5, additionalCardInElite = 0, additionalCardInBoss = 0;
+    public static int ascensionStringRows = 20, rareCardProb = 5, additionalCardInElite = 0, additionalCardInBoss = 0;
 
     //This is used to prefix the IDs of various objects like cards and relics,
     //to avoid conflicts between different mods using the same name for things.
@@ -61,12 +61,14 @@ public class AscensionIsAllYouNeed implements
         BaseMod.subscribe(this); //This will make BaseMod trigger all the subscribers at their appropriate times.
         logger.info("{} subscribed to BaseMod.", modID);
         Properties defaultSettings = new Properties();
+        defaultSettings.setProperty("ascensionStringRows", String.valueOf(ascensionStringRows));
         defaultSettings.setProperty("rareCardProb", String.valueOf(rareCardProb));
         defaultSettings.setProperty("additionalCardInElite", String.valueOf(additionalCardInElite));
         defaultSettings.setProperty("additionalCardInBoss", String.valueOf(additionalCardInBoss));
 
         try {
             ascensionIsAllYouNeedConfig = new SpireConfig(modID, FILE_NAME, defaultSettings);
+            ascensionStringRows = ascensionIsAllYouNeedConfig.getInt("ascensionStringRows");
             rareCardProb = ascensionIsAllYouNeedConfig.getInt("rareCardProb");
             additionalCardInElite = ascensionIsAllYouNeedConfig.getInt("additionalCardInElite");
             additionalCardInBoss = ascensionIsAllYouNeedConfig.getInt("additionalCardInBoss");
@@ -78,10 +80,10 @@ public class AscensionIsAllYouNeed implements
 
     @Override
     public void receivePostInitialize() {
-        initializeConfig();
         new AutoAdd(modID)
                 .packageFilter("ascensionisallyouneed.ascensions")
                 .any(AbstractAscension.class, (info, abstractAugment) -> AscensionIsAllYouNeed.registerAscension(abstractAugment));
+        initializeConfig();
     }
 
     private static void registerAscension(AbstractAscension ascension) {
@@ -116,13 +118,35 @@ public class AscensionIsAllYouNeed implements
         Texture badgeTexture = TextureLoader.getTexture(imagePath("badge.png"));
         settingsPanel = new ModPanel();
 
-        ModLabel rareCardProbLabel = new ModLabel(SettingText[0], 350.0f, 750.0f, Settings.CREAM_COLOR, FontHelper.charDescFont, settingsPanel,
+        int textID = 0;
+        float yPos = 750.0f;
+        ModLabel ascensionStringRowsLabel = new ModLabel(SettingText[textID], 350.0f, yPos, Settings.CREAM_COLOR, FontHelper.charDescFont, settingsPanel,
+                (label) -> {
+                });
+        settingsPanel.addUIElement(ascensionStringRowsLabel);
+
+        float ascensionStringRowsSliderOffset = FontHelper.getWidth(FontHelper.charDescFont, SettingText[textID++], 1.0F / Settings.scale) + 40.0F;
+        ModMinMaxSlider ascensionStringRowsSlider = new ModMinMaxSlider("", 350.0f + ascensionStringRowsSliderOffset, yPos + 7.0F, 0.0F, maxAscension,
+                (float) ascensionIsAllYouNeedConfig.getInt("ascensionStringRows"), "%.0f", settingsPanel, (slider) -> {
+            ascensionIsAllYouNeedConfig.setInt("ascensionStringRows", Math.round(slider.getValue()));
+            ascensionStringRows = Math.round(slider.getValue());
+
+            try {
+                ascensionIsAllYouNeedConfig.save();
+            } catch (IOException var2) {
+                var2.printStackTrace();
+            }
+        });
+        settingsPanel.addUIElement(ascensionStringRowsSlider);
+
+        yPos -= 50.0f;
+        ModLabel rareCardProbLabel = new ModLabel(SettingText[textID], 350.0f, yPos, Settings.CREAM_COLOR, FontHelper.charDescFont, settingsPanel,
                 (label) -> {
                 });
         settingsPanel.addUIElement(rareCardProbLabel);
 
-        float rareCardProbSliderOffset = FontHelper.getWidth(FontHelper.charDescFont, SettingText[0], 1.0F / Settings.scale) + 40.0F;
-        ModMinMaxSlider rareCardProbSlider = new ModMinMaxSlider("", 350.0f + rareCardProbSliderOffset, 750.0f + 7.0F, 1.0F, 5.0F,
+        float rareCardProbSliderOffset = FontHelper.getWidth(FontHelper.charDescFont, SettingText[textID++], 1.0F / Settings.scale) + 40.0F;
+        ModMinMaxSlider rareCardProbSlider = new ModMinMaxSlider("", 350.0f + rareCardProbSliderOffset, yPos + 7.0F, 1.0F, 5.0F,
                 (float) ascensionIsAllYouNeedConfig.getInt("rareCardProb"), "%.0f%%", settingsPanel, (slider) -> {
             ascensionIsAllYouNeedConfig.setInt("rareCardProb", Math.round(slider.getValue()));
             rareCardProb = Math.round(slider.getValue());
@@ -135,13 +159,14 @@ public class AscensionIsAllYouNeed implements
         });
         settingsPanel.addUIElement(rareCardProbSlider);
 
-        ModLabel additionalCardInEliteLabel = new ModLabel(SettingText[1], 350.0f, 700.0f, Settings.CREAM_COLOR, FontHelper.charDescFont, settingsPanel,
+        yPos -= 50.0f;
+        ModLabel additionalCardInEliteLabel = new ModLabel(SettingText[textID], 350.0f, yPos, Settings.CREAM_COLOR, FontHelper.charDescFont, settingsPanel,
                 (label) -> {
                 });
         settingsPanel.addUIElement(additionalCardInEliteLabel);
 
-        float additionalCardInEliteSliderOffset = FontHelper.getWidth(FontHelper.charDescFont, SettingText[1], 1.0F / Settings.scale) + 40.0F;
-        ModMinMaxSlider additionalCardInEliteSlider = new ModMinMaxSlider("", 350.0f + additionalCardInEliteSliderOffset, 700.0f + 7.0F, 0.0F, 2.0F,
+        float additionalCardInEliteSliderOffset = FontHelper.getWidth(FontHelper.charDescFont, SettingText[textID++], 1.0F / Settings.scale) + 40.0F;
+        ModMinMaxSlider additionalCardInEliteSlider = new ModMinMaxSlider("", 350.0f + additionalCardInEliteSliderOffset, yPos + 7.0F, 0.0F, 2.0F,
                 (float) ascensionIsAllYouNeedConfig.getInt("additionalCardInElite"), "%.0f", settingsPanel, (slider) -> {
             ascensionIsAllYouNeedConfig.setInt("additionalCardInElite", Math.round(slider.getValue()));
             additionalCardInElite = Math.round(slider.getValue());
@@ -154,13 +179,14 @@ public class AscensionIsAllYouNeed implements
         });
         settingsPanel.addUIElement(additionalCardInEliteSlider);
 
-        ModLabel additionalCardInBossLabel = new ModLabel(SettingText[2], 350.0f, 650.0f, Settings.CREAM_COLOR, FontHelper.charDescFont, settingsPanel,
+        yPos -= 50.0f;
+        ModLabel additionalCardInBossLabel = new ModLabel(SettingText[textID], 350.0f, yPos, Settings.CREAM_COLOR, FontHelper.charDescFont, settingsPanel,
                 (label) -> {
                 });
         settingsPanel.addUIElement(additionalCardInBossLabel);
 
-        float additionalCardInBossSliderOffset = FontHelper.getWidth(FontHelper.charDescFont, SettingText[2], 1.0F / Settings.scale) + 40.0F;
-        ModMinMaxSlider additionalCardInBossSlider = new ModMinMaxSlider("", 350.0f + additionalCardInBossSliderOffset, 650.0f + 7.0F, 0.0F, 2.0F,
+        float additionalCardInBossSliderOffset = FontHelper.getWidth(FontHelper.charDescFont, SettingText[textID++], 1.0F / Settings.scale) + 40.0F;
+        ModMinMaxSlider additionalCardInBossSlider = new ModMinMaxSlider("", 350.0f + additionalCardInBossSliderOffset, yPos + 7.0F, 0.0F, 2.0F,
                 (float) ascensionIsAllYouNeedConfig.getInt("additionalCardInBoss"), "%.0f", settingsPanel, (slider) -> {
             ascensionIsAllYouNeedConfig.setInt("additionalCardInBoss", Math.round(slider.getValue()));
             additionalCardInBoss = Math.round(slider.getValue());
@@ -173,11 +199,14 @@ public class AscensionIsAllYouNeed implements
         });
         settingsPanel.addUIElement(additionalCardInBossSlider);
 
-        ModLabel warningLabel = new ModLabel(SettingText[3], 350.0f, 550.0f, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
+        yPos -= 100.0f;
+        ModLabel warningLabel = new ModLabel(SettingText[textID++], 350.0f, yPos, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
                 (label) -> {
                 });
         settingsPanel.addUIElement(warningLabel);
-        ModLabeledButton unlockAscension21Button = new ModLabeledButton(SettingText[4], 350.0f, 450.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
+
+        yPos -= 100.0f;
+        ModLabeledButton unlockAscension21Button = new ModLabeledButton(SettingText[textID++], 350.0f, yPos, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
                 (button) -> {
                     int newAscensionLevel = AscensionIsAllYouNeed.maxAscension;
                     if (newAscensionLevel <= 20) {
@@ -186,25 +215,29 @@ public class AscensionIsAllYouNeed implements
                     for (AbstractPlayer character : CardCrawlGame.characterManager.getAllCharacters()) {
                         character.loadPrefs();
                         if (character.getPrefs().getInteger("ASCENSION_LEVEL", 1) == 20
-                                && character.getPrefs().getInteger("ascensionisallyouneed:ASCENSION_LEVEL", 1) <= 20) {
-                            character.getPrefs().putInteger("ascensionisallyouneed:ASCENSION_LEVEL", 21);
-                            character.getPrefs().putInteger("ascensionisallyouneed:LAST_ASCENSION_LEVEL", 21);
+                                && character.getPrefs().getInteger(AscensionIsAllYouNeed.makeID("ASCENSION_LEVEL"), 1) <= 20) {
+                            character.getPrefs().putInteger(AscensionIsAllYouNeed.makeID("ASCENSION_LEVEL"), 21);
+                            character.getPrefs().putInteger(AscensionIsAllYouNeed.makeID("LAST_ASCENSION_LEVEL"), 21);
                             character.getPrefs().flush();
                         }
                     }
                 });
         settingsPanel.addUIElement(unlockAscension21Button);
-        ModLabeledButton unlockHighestAscensionButton = new ModLabeledButton(SettingText[5], 350.0f, 350.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
+
+        yPos -= 100.0f;
+        ModLabeledButton unlockHighestAscensionButton = new ModLabeledButton(SettingText[textID++], 350.0f, yPos, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
             (button) -> {
                 int newAscensionLevel = AscensionIsAllYouNeed.maxAscension;
                 for (AbstractPlayer character : CardCrawlGame.characterManager.getAllCharacters()) {
                     character.loadPrefs();
-                    character.getPrefs().putInteger("ascensionisallyouneed:ASCENSION_LEVEL", newAscensionLevel);
+                    character.getPrefs().putInteger(AscensionIsAllYouNeed.makeID("ASCENSION_LEVEL"), newAscensionLevel);
                     character.getPrefs().flush();
                 }
             });
         settingsPanel.addUIElement(unlockHighestAscensionButton);
-        ModLabeledButton removeHistoryButton = new ModLabeledButton(SettingText[6], 350.0f, 250.0f, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
+
+        yPos -= 100.0f;
+        ModLabeledButton removeHistoryButton = new ModLabeledButton(SettingText[textID++], 350.0f, yPos, Settings.CREAM_COLOR, Settings.RED_TEXT_COLOR, FontHelper.charDescFont, settingsPanel,
                 (button) -> {
                     for (AbstractPlayer character : CardCrawlGame.characterManager.getAllCharacters()) {
                         character.loadPrefs();
@@ -212,12 +245,13 @@ public class AscensionIsAllYouNeed implements
                             character.getPrefs().putInteger("ASCENSION_LEVEL", 20);
                         }
                         character.getPrefs().putInteger("LAST_ASCENSION_LEVEL", 1);
-                        character.getPrefs().data.remove("ascensionisallyouneed:ASCENSION_LEVEL");
-                        character.getPrefs().data.remove("ascensionisallyouneed:LAST_ASCENSION_LEVEL");
+                        character.getPrefs().data.remove(AscensionIsAllYouNeed.makeID("ASCENSION_LEVEL"));
+                        character.getPrefs().data.remove(AscensionIsAllYouNeed.makeID("LAST_ASCENSION_LEVEL"));
                         character.getPrefs().flush();
                     }
                 });
         settingsPanel.addUIElement(removeHistoryButton);
+
         BaseMod.registerModBadge(badgeTexture, info.Name, GeneralUtils.arrToString(info.Authors), info.Description, settingsPanel);
     }
 

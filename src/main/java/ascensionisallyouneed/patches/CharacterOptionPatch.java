@@ -1,7 +1,6 @@
 package ascensionisallyouneed.patches;
 
 import ascensionisallyouneed.AscensionIsAllYouNeed;
-import ascensionisallyouneed.ascensions.AbstractAscension;
 import com.evacipated.cardcrawl.modthespire.lib.*;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.helpers.Prefs;
@@ -23,14 +22,14 @@ public class CharacterOptionPatch {
             int newAscensionLevel = AscensionIsAllYouNeed.maxAscension;
             CardCrawlGame.mainMenuScreen.charSelectScreen.ascensionLevel =
                     Math.max(pref.getInteger("LAST_ASCENSION_LEVEL", 1),
-                            pref.getInteger("ascensionisallyouneed:LAST_ASCENSION_LEVEL", 1));
+                            pref.getInteger(AscensionIsAllYouNeed.makeID("LAST_ASCENSION_LEVEL"), 1));
             if (newAscensionLevel < CardCrawlGame.mainMenuScreen.charSelectScreen.ascensionLevel) {
                 CardCrawlGame.mainMenuScreen.charSelectScreen.ascensionLevel = newAscensionLevel;
             }
 
             maxAscensionLevel[0] =
                     Math.max(pref.getInteger("ASCENSION_LEVEL", 1),
-                            pref.getInteger("ascensionisallyouneed:ASCENSION_LEVEL", 1));
+                            pref.getInteger(AscensionIsAllYouNeed.makeID("ASCENSION_LEVEL"), 1));
             if (newAscensionLevel < maxAscensionLevel[0]) {
                 maxAscensionLevel[0] = newAscensionLevel;
             }

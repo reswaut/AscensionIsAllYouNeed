@@ -10,15 +10,18 @@
   },
   "ascensionisallyouneed:Settings": {
     "TEXT": [
+      "Displayed Ascension information in runs:",
       "Rare card probability reduction on Ascension 29+ (Default 5%):",
       "Additional cards Elites drop on Ascension 29+ (Default 0):",
       "Additional cards Bosses drop on Ascension 29+ (Default 0):",
       "WARNING: The following operations are going to replace your current Ascension progress.\nThey are likely to cause issues if you have a saved run.",
       "Unlock Ascension 21 for all characters at Ascension 20",
-      "Unlock highest Ascension Level for ALL characters",
+      "Unlock Max Ascension Level for ALL characters",
       "Erase ALL Ascension progress saved by this mod"
     ],
     "EXTRA_TEXT": [
+      "(%d more Level ...)",
+      "(%d more Levels ...)"
     ]
   },
   "ascensionisallyouneed:PoorElitesAscension": {
