@@ -14,7 +14,10 @@ import com.megacrit.cardcrawl.potions.AbstractPotion;
 import com.megacrit.cardcrawl.random.Random;
 import com.megacrit.cardcrawl.relics.AbstractRelic;
 import com.megacrit.cardcrawl.rewards.chests.AbstractChest;
+import com.megacrit.cardcrawl.rooms.AbstractRoom;
 import javassist.CtBehavior;
+
+import java.util.ArrayList;
 
 import static com.megacrit.cardcrawl.dungeons.AbstractDungeon.returnRandomPotion;
 
@@ -203,6 +206,41 @@ public class AbstractDungeonPatch {
                 Matcher finalMatcher = new Matcher.MethodCallMatcher(ModHelper.class, "isModEnabled");
                 return LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
             }
+        }
+    }
+
+    @SpirePatch(
+            clz = AbstractDungeon.class,
+            method = "generateRoomTypes"
+    )
+    public static class ModifyRoomChances {
+        public static float dungeonShopRoomChance, dungeonRestRoomChance, dungeonEliteRoomChance, dungeonEventRoomChance;
+
+        @SpirePrefixPatch
+        public static void Prefix(ArrayList<AbstractRoom> roomList, int availableRoomCount,
+                                  @ByRef float[] ___shopRoomChance, @ByRef float[] ___restRoomChance, @ByRef float[] ___eliteRoomChance, @ByRef float[] ___eventRoomChance) {
+            dungeonShopRoomChance = ___shopRoomChance[0];
+            dungeonRestRoomChance = ___restRoomChance[0];
+            dungeonEliteRoomChance = ___eliteRoomChance[0];
+            dungeonEventRoomChance = ___eventRoomChance[0];
+            int ascensionLevel = AbstractDungeon.ascensionLevel;
+            for (AbstractAscension ascension : AscensionIsAllYouNeed.ascensions) {
+                if (ascensionLevel >= ascension.getAscensionLevel()) {
+                    ___shopRoomChance[0] = ascension.modifyShopRoomChance(___shopRoomChance[0]);
+                    ___restRoomChance[0] = ascension.modifyRestRoomChance(___restRoomChance[0]);
+                    ___eliteRoomChance[0] = ascension.modifyEliteRoomChance(___eliteRoomChance[0]);
+                    ___eventRoomChance[0] = ascension.modifyEventRoomChance(___eventRoomChance[0]);
+                }
+            }
+        }
+
+        @SpirePostfixPatch
+        public static void Postfix(ArrayList<AbstractRoom> roomList, int availableRoomCount,
+                                   @ByRef float[] ___shopRoomChance, @ByRef float[] ___restRoomChance, @ByRef float[] ___eliteRoomChance, @ByRef float[] ___eventRoomChance) {
+            ___shopRoomChance[0] = dungeonShopRoomChance;
+            ___restRoomChance[0] = dungeonRestRoomChance;
+            ___eliteRoomChance[0] = dungeonEliteRoomChance;
+            ___eventRoomChance[0] = dungeonEventRoomChance;
         }
     }
 }

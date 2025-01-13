@@ -27,13 +27,17 @@ public class UnfavorableMapsAscension extends AbstractAscension {
 
     @Override
     public void modifyMap(ArrayList<ArrayList<MapRoomNode>> map) {
-        int normalEnemyCount = 0;
+        int normalEnemyCount = 0, burningCount = 0;
         ArrayList<ArrayList<MapRoomNode>> normalEnemyNodesByWidth = new ArrayList<>();
         for (ArrayList<MapRoomNode> mapRoomNodes : map) {
             int width = 0;
             for (MapRoomNode node : mapRoomNodes) {
                 if (node.room instanceof MonsterRoom && !(node.room instanceof MonsterRoomElite)) {
                     ++width;
+                    if (MapRoomNodePatch.IsBurningField.isBurning.get(node)) {
+                        ++burningCount;
+//                        MapRoomNodePatch.IsBurningField.isBurning.set(node, false);
+                    }
                 }
             }
             while (normalEnemyNodesByWidth.size() <= width) {
@@ -50,7 +54,6 @@ public class UnfavorableMapsAscension extends AbstractAscension {
             return;
         }
         int maxWidth = normalEnemyNodesByWidth.size() - 1;
-        int burningCount = (normalEnemyCount - 1) / mapRng.random(6, 10) + 1;
         for (int i = 1; i < maxWidth; ++i) {
             for (int j = 1; j < normalEnemyNodesByWidth.get(i).size(); ++j) {
                 int index = mapRng.random(0, j);
@@ -73,5 +76,25 @@ public class UnfavorableMapsAscension extends AbstractAscension {
                 break;
             }
         }
+    }
+
+    @Override
+    public float modifyShopRoomChance(float chance) {
+        return chance * 0.8F;
+    }
+
+    @Override
+    public float modifyRestRoomChance(float chance) {
+        return chance * 0.8F;
+    }
+
+    @Override
+    public float modifyEliteRoomChance(float chance) {
+        return chance * 1.2F;
+    }
+
+    @Override
+    public float modifyEventRoomChance(float chance) {
+        return chance * 1.2F;
     }
 }

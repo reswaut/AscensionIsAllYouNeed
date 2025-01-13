@@ -36,6 +36,22 @@ public class AbstractAscension implements Comparable<AbstractAscension> {
     }
     public void modifyStartingDeck(CardGroup masterDeck) {}
 
+    public float modifyShopRoomChance(float chance) {
+        return chance;
+    }
+
+    public float modifyRestRoomChance(float chance) {
+        return chance;
+    }
+
+    public float modifyEliteRoomChance(float chance) {
+        return chance;
+    }
+
+    public float modifyEventRoomChance(float chance) {
+        return chance;
+    }
+
     public int modifyNumberOfCardsInReward(int numCards) {
         return numCards;
     }

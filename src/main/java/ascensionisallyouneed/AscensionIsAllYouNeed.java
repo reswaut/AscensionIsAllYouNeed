@@ -73,7 +73,7 @@ public class AscensionIsAllYouNeed implements
             additionalCardInElite = ascensionIsAllYouNeedConfig.getInt("additionalCardInElite");
             additionalCardInBoss = ascensionIsAllYouNeedConfig.getInt("additionalCardInBoss");
         } catch (IOException e) {
-            logger.error("Card Augments SpireConfig initialization failed:");
+            logger.error("AscensionIsAllYouNeed SpireConfig initialization failed:");
             e.printStackTrace();
         }
     }
@@ -88,6 +88,7 @@ public class AscensionIsAllYouNeed implements
 
     private static void registerAscension(AbstractAscension ascension) {
         ascensions.add(ascension);
+        ascensions.sort(Comparator.comparingInt(AbstractAscension::getAscensionLevel));
         maxAscension = Math.max(maxAscension, ascension.getAscensionLevel());
     }
 

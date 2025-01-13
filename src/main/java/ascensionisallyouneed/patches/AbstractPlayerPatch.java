@@ -9,6 +9,7 @@ import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.map.MapRoomNode;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import com.megacrit.cardcrawl.monsters.city.Byrd;
 import com.megacrit.cardcrawl.powers.MetallicizePower;
 import com.megacrit.cardcrawl.powers.RegenerateMonsterPower;
 import com.megacrit.cardcrawl.powers.StrengthPower;
@@ -44,7 +45,14 @@ public class AbstractPlayerPatch {
         public static void Insert(AbstractPlayer __instance) {
             if (MapRoomNodePatch.IsBurningField.isBurning.get(AbstractDungeon.getCurrMapNode())) {
                 AbstractRoom abstractRoom = AbstractDungeon.getCurrRoom();
-                int modifierIndex = AbstractDungeon.miscRng.random(0, 3);
+                boolean hasByrd = false;
+                for (AbstractMonster m : abstractRoom.monsters.monsters) {
+                    if (m instanceof Byrd) {
+                        hasByrd = true;
+                        break;
+                    }
+                }
+                int modifierIndex = AbstractDungeon.miscRng.random(hasByrd ? 1 : 0, 3);
                 switch (modifierIndex) {
                     case 0:
                         for (AbstractMonster m : abstractRoom.monsters.monsters) {
