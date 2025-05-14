@@ -6,24 +6,25 @@ import basemod.abstracts.AbstractCardModifier;
 import basemod.helpers.CardModifierManager;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
-import com.megacrit.cardcrawl.actions.unique.LoseEnergyAction;
+import com.megacrit.cardcrawl.actions.common.LoseHPAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.curses.AscendersBane;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.localization.CardStrings;
 
 public class AscendersBanePatch {
-    public static class LoseEnergyOnDrawnModifier extends AbstractCardModifier {
+    public static class LoseHPOnDrawnModifier extends AbstractCardModifier {
         @Override
         public void onDrawn(AbstractCard card) {
             if (card instanceof AscendersBane) {
-                this.addToBot(new LoseEnergyAction(1));
+                this.addToBot(new LoseHPAction(AbstractDungeon.player, AbstractDungeon.player, 1));
             }
         }
 
         @Override
         public AbstractCardModifier makeCopy() {
-            return new LoseEnergyOnDrawnModifier();
+            return new LoseHPOnDrawnModifier();
         }
     }
 
@@ -41,7 +42,7 @@ public class AscendersBanePatch {
                 ReflectionHacks.privateMethod(AbstractCard.class, "upgradeName").invoke(__instance);
                 __instance.rawDescription = cardStrings.UPGRADE_DESCRIPTION;
                 __instance.initializeDescription();
-                CardModifierManager.addModifier(__instance, new LoseEnergyOnDrawnModifier());
+                CardModifierManager.addModifier(__instance, new LoseHPOnDrawnModifier());
             }
         }
     }

@@ -14,10 +14,10 @@
       "Rare card probability reduction on Ascension 29+ (Default 5%):",
       "Additional cards Elites drop on Ascension 29+ (Default 0):",
       "Additional cards Bosses drop on Ascension 29+ (Default 0):",
-      "WARNING: The following operations will overwrite your Ascension progress.\nThey are likely to cause issues if you have a saved run.",
+      "WARNING: The following operations overwrites your Ascension progress.\nThey are likely to cause issues if you have a saved run.",
       "Unlock Ascension 21 for all characters at Ascension 20",
-      "Unlock Max Ascension Level for ALL characters",
-      "Erase ALL Ascension progress saved by this Mod"
+      "Unlock Max Ascension Level for all characters",
+      "Erase all Ascension progress saved by this Mod"
     ],
     "EXTRA_TEXT": [
       "(%d more Level ...)",

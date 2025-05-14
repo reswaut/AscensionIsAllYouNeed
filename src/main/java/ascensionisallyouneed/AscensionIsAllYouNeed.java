@@ -35,48 +35,24 @@ public class AscensionIsAllYouNeed implements
         EditStringsSubscriber,
         PostInitializeSubscriber {
     public static ModInfo info;
-    public static String modID; //Edit your pom.xml to change this
+    private static final String defaultLanguage = "eng";
     static { loadModInfo(); }
     private static final String resourcesFolder = checkResourcesPath();
-    public static final Logger logger = LogManager.getLogger(modID); //Used to output to the console.
+    public static String modID;
     public static int maxAscension = 20;
     public static ArrayList<AbstractAscension> ascensions = new ArrayList<>();
-    private ModPanel settingsPanel;
     public static String FILE_NAME = "AscensionIsAllYouNeedConfig";
     public static SpireConfig ascensionIsAllYouNeedConfig;
     public static int ascensionStringRows = 20, rareCardProb = 5, additionalCardInElite = 0, additionalCardInBoss = 0;
 
-    //This is used to prefix the IDs of various objects like cards and relics,
-    //to avoid conflicts between different mods using the same name for things.
     public static String makeID(String id) {
         return modID + ":" + id;
     }
 
-    //This will be called by ModTheSpire because of the @SpireInitializer annotation at the top of the class.
     public static void initialize() {
         new AscensionIsAllYouNeed();
     }
-
-    public AscensionIsAllYouNeed() {
-        BaseMod.subscribe(this); //This will make BaseMod trigger all the subscribers at their appropriate times.
-        logger.info("{} subscribed to BaseMod.", modID);
-        Properties defaultSettings = new Properties();
-        defaultSettings.setProperty("ascensionStringRows", String.valueOf(ascensionStringRows));
-        defaultSettings.setProperty("rareCardProb", String.valueOf(rareCardProb));
-        defaultSettings.setProperty("additionalCardInElite", String.valueOf(additionalCardInElite));
-        defaultSettings.setProperty("additionalCardInBoss", String.valueOf(additionalCardInBoss));
-
-        try {
-            ascensionIsAllYouNeedConfig = new SpireConfig(modID, FILE_NAME, defaultSettings);
-            ascensionStringRows = ascensionIsAllYouNeedConfig.getInt("ascensionStringRows");
-            rareCardProb = ascensionIsAllYouNeedConfig.getInt("rareCardProb");
-            additionalCardInElite = ascensionIsAllYouNeedConfig.getInt("additionalCardInElite");
-            additionalCardInBoss = ascensionIsAllYouNeedConfig.getInt("additionalCardInBoss");
-        } catch (IOException e) {
-            logger.error("AscensionIsAllYouNeed SpireConfig initialization failed:");
-            e.printStackTrace();
-        }
-    }
+    public static final Logger logger = LogManager.getLogger(modID);
 
     @Override
     public void receivePostInitialize() {
@@ -114,10 +90,50 @@ public class AscensionIsAllYouNeed implements
         return AbstractAscension.TEXT[0];
     }
 
+    public AscensionIsAllYouNeed() {
+        BaseMod.subscribe(this);
+        logger.info("{} subscribed to BaseMod.", modID);
+        Properties defaultSettings = new Properties();
+        defaultSettings.setProperty("ascensionStringRows", String.valueOf(ascensionStringRows));
+        defaultSettings.setProperty("rareCardProb", String.valueOf(rareCardProb));
+        defaultSettings.setProperty("additionalCardInElite", String.valueOf(additionalCardInElite));
+        defaultSettings.setProperty("additionalCardInBoss", String.valueOf(additionalCardInBoss));
+
+        try {
+            ascensionIsAllYouNeedConfig = new SpireConfig(modID, FILE_NAME, defaultSettings);
+            ascensionStringRows = ascensionIsAllYouNeedConfig.getInt("ascensionStringRows");
+            rareCardProb = ascensionIsAllYouNeedConfig.getInt("rareCardProb");
+            additionalCardInElite = ascensionIsAllYouNeedConfig.getInt("additionalCardInElite");
+            additionalCardInBoss = ascensionIsAllYouNeedConfig.getInt("additionalCardInBoss");
+        } catch (IOException e) {
+            logger.error("AscensionIsAllYouNeed SpireConfig initialization failed:");
+            e.printStackTrace();
+        }
+    }
+
+    private static String checkResourcesPath() {
+        String name = AscensionIsAllYouNeed.class.getName(); //getPackage can be iffy with patching, so class name is used instead.
+        name = name.substring(0, name.indexOf('.'));
+
+        FileHandle resources = new LwjglFileHandle(name, Files.FileType.Internal);
+        if (resources.child("images").exists() && resources.child("localization").exists()) {
+            return name;
+        }
+
+        throw new RuntimeException("\n\tFailed to find resources folder; expected it to be named \"" + name + "\"." +
+                " Either make sure the folder under resources has the same name as your mod's package, or change the line\n" +
+                "\t\"private static final String resourcesFolder = checkResourcesPath();\"\n" +
+                "\tat the top of the " + AscensionIsAllYouNeed.class.getSimpleName() + " java file.");
+    }
+
+    private static String getLangString() {
+        return Settings.language.name().toLowerCase();
+    }
+
     public void initializeConfig() {
         String[] SettingText = CardCrawlGame.languagePack.getUIString(AscensionIsAllYouNeed.makeID("Settings")).TEXT;
         Texture badgeTexture = TextureLoader.getTexture(imagePath("badge.png"));
-        settingsPanel = new ModPanel();
+        ModPanel settingsPanel = new ModPanel();
 
         int textID = 0;
         float yPos = 750.0f;
@@ -256,44 +272,13 @@ public class AscensionIsAllYouNeed implements
         BaseMod.registerModBadge(badgeTexture, info.Name, GeneralUtils.arrToString(info.Authors), info.Description, settingsPanel);
     }
 
-    /*----------Localization----------*/
-
-    //This is used to load the appropriate localization files based on language.
-    private static String getLangString()
-    {
-        return Settings.language.name().toLowerCase();
-    }
-    private static final String defaultLanguage = "eng";
-
-    @Override
-    public void receiveEditStrings() {
-        /*
-            First, load the default localization.
-            Then, if the current language is different, attempt to load localization for that language.
-            This results in the default localization being used for anything that might be missing.
-            The same process is used to load keywords slightly below.
-        */
-        loadLocalization(defaultLanguage); //no exception catching for default localization; you better have at least one that works.
-        if (!defaultLanguage.equals(getLangString())) {
-            try {
-                loadLocalization(getLangString());
-            }
-            catch (GdxRuntimeException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private void loadLocalization(String lang) {
-        //While this does load every type of localization, most of these files are just outlines so that you can see how they're formatted.
-        //Feel free to comment out/delete any that you don't end up using.
         BaseMod.loadCustomStringsFile(CardStrings.class,
                 localizationPath(lang, "CardStrings.json"));
         BaseMod.loadCustomStringsFile(UIStrings.class,
                 localizationPath(lang, "UIStrings.json"));
     }
 
-    //These methods are used to generate the correct filepaths to various parts of the resources folder.
     public static String localizationPath(String lang, String file) {
         return resourcesFolder + "/localization/" + lang + "/" + file;
     }
@@ -302,29 +287,18 @@ public class AscensionIsAllYouNeed implements
         return resourcesFolder + "/images/" + file;
     }
 
-    /**
-     * Checks the expected resources path based on the package name.
-     */
-    private static String checkResourcesPath() {
-        String name = AscensionIsAllYouNeed.class.getName(); //getPackage can be iffy with patching, so class name is used instead.
-        int separator = name.indexOf('.');
-        if (separator > 0)
-            name = name.substring(0, separator);
-
-        FileHandle resources = new LwjglFileHandle(name, Files.FileType.Internal);
-        if (resources.child("images").exists() && resources.child("localization").exists()) {
-            return name;
+    @Override
+    public void receiveEditStrings() {
+        loadLocalization(defaultLanguage);
+        if (!defaultLanguage.equals(getLangString())) {
+            try {
+                loadLocalization(getLangString());
+            } catch (GdxRuntimeException e) {
+                e.printStackTrace();
+            }
         }
-
-        throw new RuntimeException("\n\tFailed to find resources folder; expected it to be named \"" + name + "\"." +
-                " Either make sure the folder under resources has the same name as your mod's package, or change the line\n" +
-                "\t\"private static final String resourcesFolder = checkResourcesPath();\"\n" +
-                "\tat the top of the " + AscensionIsAllYouNeed.class.getSimpleName() + " java file.");
     }
 
-    /**
-     * This determines the mod's ID based on information stored by ModTheSpire.
-     */
     private static void loadModInfo() {
         Optional<ModInfo> infos = Arrays.stream(Loader.MODINFOS).filter((modInfo)->{
             AnnotationDB annotationDB = Patcher.annotationDBMap.get(modInfo.jarURL);
