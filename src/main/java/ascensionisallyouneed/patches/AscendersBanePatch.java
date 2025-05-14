@@ -7,6 +7,7 @@ import basemod.helpers.CardModifierManager;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
 import com.megacrit.cardcrawl.actions.common.LoseHPAction;
+import com.megacrit.cardcrawl.actions.unique.LoseEnergyAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.curses.AscendersBane;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
@@ -14,17 +15,21 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.localization.CardStrings;
 
 public class AscendersBanePatch {
-    public static class LoseHPOnDrawnModifier extends AbstractCardModifier {
+    public static class LoseEnergyOrHPOnDrawnModifier extends AbstractCardModifier {
         @Override
         public void onDrawn(AbstractCard card) {
             if (card instanceof AscendersBane) {
-                this.addToBot(new LoseHPAction(AbstractDungeon.player, AbstractDungeon.player, 1));
+                if (AscensionIsAllYouNeed.loseEnergy) {
+                    this.addToBot(new LoseEnergyAction(1));
+                } else {
+                    this.addToBot(new LoseHPAction(AbstractDungeon.player, AbstractDungeon.player, 1));
+                }
             }
         }
 
         @Override
         public AbstractCardModifier makeCopy() {
-            return new LoseHPOnDrawnModifier();
+            return new LoseEnergyOrHPOnDrawnModifier();
         }
     }
 
@@ -40,9 +45,13 @@ public class AscendersBanePatch {
         public static void Prefix(AscendersBane __instance) {
             if (!__instance.upgraded) {
                 ReflectionHacks.privateMethod(AbstractCard.class, "upgradeName").invoke(__instance);
-                __instance.rawDescription = cardStrings.UPGRADE_DESCRIPTION;
+                if (AscensionIsAllYouNeed.loseEnergy) {
+                    __instance.rawDescription = cardStrings.EXTENDED_DESCRIPTION[0];
+                } else {
+                    __instance.rawDescription = cardStrings.UPGRADE_DESCRIPTION;
+                }
                 __instance.initializeDescription();
-                CardModifierManager.addModifier(__instance, new LoseHPOnDrawnModifier());
+                CardModifierManager.addModifier(__instance, new LoseEnergyOrHPOnDrawnModifier());
             }
         }
     }
