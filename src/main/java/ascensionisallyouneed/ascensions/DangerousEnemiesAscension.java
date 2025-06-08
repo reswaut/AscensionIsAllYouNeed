@@ -3,7 +3,6 @@ package ascensionisallyouneed.ascensions;
 import ascensionisallyouneed.AscensionIsAllYouNeed;
 import ascensionisallyouneed.patches.MapRoomNodePatch;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
-import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.map.MapRoomNode;
 import com.megacrit.cardcrawl.rooms.AbstractRoom;
@@ -51,7 +50,7 @@ public class DangerousEnemiesAscension extends AbstractAscension {
 
     @Override
     public int modifyGoldRewards(AbstractRoom room, int gold) {
-        if (MapRoomNodePatch.IsBurningField.isBurning.get(AbstractDungeon.getCurrMapNode()) && !Settings.isDailyRun) {
+        if (MapRoomNodePatch.IsBurningField.isBurning.get(AbstractDungeon.getCurrMapNode())) {
             return Math.round(gold * 1.5F);
         }
         return gold;
@@ -59,7 +58,7 @@ public class DangerousEnemiesAscension extends AbstractAscension {
 
     @Override
     public int modifyCardChance(int chance) {
-        if (MapRoomNodePatch.IsBurningField.isBurning.get(AbstractDungeon.getCurrMapNode()) && !Settings.isDailyRun) {
+        if (MapRoomNodePatch.IsBurningField.isBurning.get(AbstractDungeon.getCurrMapNode())) {
             return chance - 3;
         }
         return chance;

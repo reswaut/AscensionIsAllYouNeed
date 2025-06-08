@@ -2,6 +2,7 @@ package ascensionisallyouneed.ascensions;
 
 import ascensionisallyouneed.AscensionIsAllYouNeed;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.rooms.AbstractRoom;
 
 public class FewerPotionsAscension extends AbstractAscension {
@@ -20,6 +21,6 @@ public class FewerPotionsAscension extends AbstractAscension {
 
     @Override
     public int modifyPotionChance(AbstractRoom room, int chance) {
-        return chance - 20;
+        return Math.max(0, chance - (AbstractDungeon.actNum - 1) * 10);
     }
 }

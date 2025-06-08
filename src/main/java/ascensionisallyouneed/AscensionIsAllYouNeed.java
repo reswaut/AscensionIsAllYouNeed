@@ -181,7 +181,7 @@ public class AscensionIsAllYouNeed implements
         ModPanel settingsPanel = new ModPanel();
 
         int textID = 0;
-        float yPos = Settings.HEIGHT * 0.5f;
+        float yPos = Settings.HEIGHT * 0.5f / Settings.scale + 200.0f;
         ModLabeledToggleButton loseEnergyButton = new ModLabeledToggleButton(SettingText[textID++], 350.0f, yPos, Settings.CREAM_COLOR, FontHelper.charDescFont, ascensionIsAllYouNeedConfig.getBool("loseEnergy"), settingsPanel, (label) -> {
         }, (button) -> {
             ascensionIsAllYouNeedConfig.setBool("loseEnergy", button.enabled);

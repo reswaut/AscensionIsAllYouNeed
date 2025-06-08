@@ -53,6 +53,7 @@ public class UnfavorableMapsAscension extends AbstractAscension {
         if (normalEnemyCount <= 0) {
             return;
         }
+        burningCount = Math.max(burningCount / 2, 1);
         int maxWidth = normalEnemyNodesByWidth.size() - 1;
         for (int i = 1; i < maxWidth; ++i) {
             for (int j = 1; j < normalEnemyNodesByWidth.get(i).size(); ++j) {
