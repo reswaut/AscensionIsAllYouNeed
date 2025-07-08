@@ -5,34 +5,22 @@
         <modID>ascensionisallyouneed</modID>
         <author>reswaut</author>
 
-        <!-- Change the path for your system to match your Steam installation. -->
-        <!-- If you're not sure, go to Slay the Spire in the Steam library, and choose Manage -> Browse local files -->
         <steam.windows>F:/SteamLibrary/steamapps</steam.windows>
         <steam.mac>${user.home}/Library/Application Support/Steam/steamapps</steam.mac>
         <steam.linux>${user.home}/.local/share/Steam/steamapps</steam.linux>
-        <!-- In the Maven tab, under Profiles, make sure only the profile for your system is enabled. Windows is the default. -->
 
-        <!-- These don't have to be up to date, it's just nice if they are. -->
         <SlayTheSpire.version>12-18-2022</SlayTheSpire.version>
-        <ModTheSpire.version>3.30.0</ModTheSpire.version>
+        <ModTheSpire.version>3.30.3</ModTheSpire.version>
 
-        <!-- These two 1.8s are referring to the Java version; don't change them. -->
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <!-- This information will be displayed in ModTheSpire, the modded launcher. -->
     <name>Ascension is All you Need</name>
-    <version>0.2.3</version>
-    <!-- Avoid using \ in this description, as they can cause the description to fail to load. -->
-    <!-- If you really want to use them, you'll need to "escape" them by putting another one in front, like \\ -->
-    <description>Adds 10 new Ascension Levels beyond Level 20.</description>
+    <version>0.2.4</version>
+    <description>Adds 10 new Ascension Levels beyond Level 20.\n在进阶20基础上新增10个更高进阶。</description>
 
-    <!--You shouldn't need to change anything below this point, but feel free to look at it.-->
-    <!--You'll get a warning regarding these when you package your mod, but don't worry, it's just set up like this for convenience.-->
-    <!--Technically these should be changed individually, but this allows you to just set it in one place.-->
-    <!--Absolutely a no-go for larger projects, but for a personal mod it's fine.-->
     <groupId>${modID}</groupId>
     <artifactId>${modID}</artifactId>
 
@@ -54,16 +42,12 @@
         <dependency>
             <groupId>basemod</groupId>
             <artifactId>basemod</artifactId>
-            <!--Don't worry about these version numbers, they're only used for display
-                in the left sidebar under External Libraries and don't need to be accurate.-->
             <version>5.55.3</version>
             <scope>system</scope>
             <systemPath>${steam.path}/workshop/content/646570/1605833019/BaseMod.jar</systemPath>
         </dependency>
     </dependencies>
 
-
-    <!-- This is how your code is packaged into the jar file-->
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
@@ -150,8 +134,6 @@
                         <phase>package</phase>
                         <configuration>
                             <target>
-                                <!--This puts a copy of your mod's jar file into the SlayTheSpire mods folder so it will be loaded.-->
-                                <!--On mac, it will be copied to another location. See further below.-->
                                 <copy file="target/${project.artifactId}.jar" tofile="${steam.path}/common/SlayTheSpire/mods/${project.artifactId}.jar"/>
                             </target>
                         </configuration>
@@ -232,7 +214,6 @@
                                 <phase>package</phase>
                                 <configuration>
                                     <target>
-                                        <!-- This moves your mod into a common folder where all mods you make can go. -->
                                         <copy file="target/${project.artifactId}.jar" tofile="${steam.path}/common/SlayTheSpire/SlayTheSpire.app/Contents/Resources/mods/${project.artifactId}.jar"/>
                                     </target>
                                 </configuration>

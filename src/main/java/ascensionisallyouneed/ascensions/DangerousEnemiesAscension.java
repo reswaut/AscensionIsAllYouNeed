@@ -49,17 +49,17 @@ public class DangerousEnemiesAscension extends AbstractAscension {
     }
 
     @Override
-    public int modifyGoldRewards(AbstractRoom room, int gold) {
+    public int modifyCardChance(int chance) {
         if (MapRoomNodePatch.IsBurningField.isBurning.get(AbstractDungeon.getCurrMapNode())) {
-            return Math.round(gold * 1.5F);
+            return chance - AscensionIsAllYouNeed.rareCardProb;
         }
-        return gold;
+        return chance;
     }
 
     @Override
-    public int modifyCardChance(int chance) {
+    public int modifyPotionChance(AbstractRoom room, int chance) {
         if (MapRoomNodePatch.IsBurningField.isBurning.get(AbstractDungeon.getCurrMapNode())) {
-            return chance - 3;
+            return 120;
         }
         return chance;
     }

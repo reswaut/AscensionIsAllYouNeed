@@ -21,6 +21,6 @@ public class FewerPotionsAscension extends AbstractAscension {
 
     @Override
     public int modifyPotionChance(AbstractRoom room, int chance) {
-        return Math.max(0, chance - (AbstractDungeon.actNum - 1) * 10);
+        return chance - (AbstractDungeon.actNum - 1) * 10;
     }
 }
