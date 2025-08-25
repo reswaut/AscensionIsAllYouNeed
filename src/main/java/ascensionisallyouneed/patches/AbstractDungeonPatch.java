@@ -6,20 +6,23 @@ import ascensionisallyouneed.ascensions.ModifyChestTierRollAscension;
 import ascensionisallyouneed.ascensions.ModifyPotionTierRollAscension;
 import ascensionisallyouneed.ascensions.ModifyRelicTierRollAscension;
 import com.evacipated.cardcrawl.modthespire.lib.*;
+import com.evacipated.cardcrawl.modthespire.lib.Matcher.FieldAccessMatcher;
+import com.evacipated.cardcrawl.modthespire.lib.Matcher.MethodCallMatcher;
+import com.evacipated.cardcrawl.modthespire.patcher.PatchingException;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.ModHelper;
 import com.megacrit.cardcrawl.helpers.PotionHelper;
 import com.megacrit.cardcrawl.potions.AbstractPotion;
+import com.megacrit.cardcrawl.potions.AbstractPotion.PotionRarity;
 import com.megacrit.cardcrawl.random.Random;
-import com.megacrit.cardcrawl.relics.AbstractRelic;
+import com.megacrit.cardcrawl.relics.AbstractRelic.RelicTier;
 import com.megacrit.cardcrawl.rewards.chests.AbstractChest;
 import com.megacrit.cardcrawl.rooms.AbstractRoom;
+import javassist.CannotCompileException;
 import javassist.CtBehavior;
 
 import java.util.ArrayList;
-
-import static com.megacrit.cardcrawl.dungeons.AbstractDungeon.returnRandomPotion;
 
 public class AbstractDungeonPatch {
     @SpirePatch(
@@ -47,7 +50,7 @@ public class AbstractDungeonPatch {
                 locator = Locator.class,
                 localvars = {"roll", "commonRelicChance", "uncommonRelicChance"}
         )
-        public static SpireReturn<AbstractRelic.RelicTier> Insert(int roll, int commonRelicChance, int uncommonRelicChance) {
+        public static SpireReturn<RelicTier> Insert(int roll, int commonRelicChance, int uncommonRelicChance) {
             int ascensionLevel = AbstractDungeon.ascensionLevel;
             for (AbstractAscension ascension : AscensionIsAllYouNeed.ascensions) {
                 if (ascensionLevel >= ascension.getAscensionLevel() && ascension instanceof ModifyRelicTierRollAscension) {
@@ -59,9 +62,9 @@ public class AbstractDungeonPatch {
 
         private static class Locator extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.MethodCallMatcher(Random.class, "random");
-                int[] tmp = LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new MethodCallMatcher(Random.class, "random");
+                int[] tmp = LineFinder.findInOrder(ctBehavior, finalMatcher);
                 return new int[]{tmp[0] + 1};
             }
         }
@@ -88,30 +91,23 @@ public class AbstractDungeonPatch {
 
         private static class Locator extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.MethodCallMatcher(Random.class, "random");
-                int[] tmp = LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new MethodCallMatcher(Random.class, "random");
+                int[] tmp = LineFinder.findInOrder(ctBehavior, finalMatcher);
                 return new int[]{tmp[0] + 1};
             }
         }
     }
 
-    @SpirePatch(
-            clz = AbstractDungeon.class,
-            method = "returnRandomPotion",
-            paramtypez = {boolean.class}
-    )
+    @SpirePatch(clz = AbstractDungeon.class, method = "returnRandomPotion", paramtypez = boolean.class)
     public static class InsertReturnRandomPotion {
-        @SpireInsertPatch(
-                locator = Locator.class,
-                localvars = {"roll"}
-        )
+        @SpireInsertPatch(locator = Locator.class, localvars = "roll")
         public static SpireReturn<AbstractPotion> Insert(boolean limited, int roll) {
             int ascensionLevel = AbstractDungeon.ascensionLevel;
             for (AbstractAscension ascension : AscensionIsAllYouNeed.ascensions) {
                 if (ascensionLevel >= ascension.getAscensionLevel() && ascension instanceof ModifyPotionTierRollAscension) {
-                    AbstractPotion.PotionRarity rarity = ((ModifyPotionTierRollAscension) ascension).modifyPotionTier(roll, PotionHelper.POTION_COMMON_CHANCE, PotionHelper.POTION_UNCOMMON_CHANCE);
-                    return SpireReturn.Return(returnRandomPotion(rarity, limited));
+                    PotionRarity rarity = ((ModifyPotionTierRollAscension) ascension).modifyPotionTier(roll, PotionHelper.POTION_COMMON_CHANCE, PotionHelper.POTION_UNCOMMON_CHANCE);
+                    return SpireReturn.Return(AbstractDungeon.returnRandomPotion(rarity, limited));
                 }
             }
             return SpireReturn.Continue();
@@ -119,24 +115,17 @@ public class AbstractDungeonPatch {
 
         private static class Locator extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.MethodCallMatcher(Random.class, "random");
-                int[] tmp = LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new MethodCallMatcher(Random.class, "random");
+                int[] tmp = LineFinder.findInOrder(ctBehavior, finalMatcher);
                 return new int[]{tmp[0] + 1};
             }
         }
     }
 
-    @SpirePatch(
-            clz = AbstractDungeon.class,
-            method = "rollRarity",
-            paramtypez = {Random.class}
-    )
+    @SpirePatch(clz = AbstractDungeon.class, method = "rollRarity", paramtypez = Random.class)
     public static class InsertRollRarity {
-        @SpireInsertPatch(
-                locator = Locator.class,
-                localvars = {"roll"}
-        )
+        @SpireInsertPatch(locator = Locator.class, localvars = "roll")
         public static void Insert(Random rng, @ByRef int[] roll) {
             int ascensionLevel = AbstractDungeon.ascensionLevel;
             for (AbstractAscension ascension : AscensionIsAllYouNeed.ascensions) {
@@ -148,9 +137,9 @@ public class AbstractDungeonPatch {
 
         private static class Locator extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.MethodCallMatcher(Random.class, "random");
-                int[] tmp = LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new MethodCallMatcher(Random.class, "random");
+                int[] tmp = LineFinder.findInOrder(ctBehavior, finalMatcher);
                 return new int[]{tmp[0] + 1};
             }
         }
@@ -175,9 +164,9 @@ public class AbstractDungeonPatch {
 
         private static class Locator extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.FieldAccessMatcher(CardCrawlGame.class, "playtime");
-                return LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new FieldAccessMatcher(CardCrawlGame.class, "playtime");
+                return LineFinder.findInOrder(ctBehavior, finalMatcher);
             }
         }
     }
@@ -187,10 +176,7 @@ public class AbstractDungeonPatch {
             method = "getRewardCards"
     )
     public static class InsertGetRewardCards {
-        @SpireInsertPatch(
-                locator = Locator.class,
-                localvars = {"numCards"}
-        )
+        @SpireInsertPatch(locator = Locator.class, localvars = "numCards")
         public static void Insert(@ByRef int[] numCards) {
             int ascensionLevel = AbstractDungeon.ascensionLevel;
             for (AbstractAscension ascension : AscensionIsAllYouNeed.ascensions) {
@@ -202,9 +188,9 @@ public class AbstractDungeonPatch {
 
         private static class Locator extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.MethodCallMatcher(ModHelper.class, "isModEnabled");
-                return LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new MethodCallMatcher(ModHelper.class, "isModEnabled");
+                return LineFinder.findInOrder(ctBehavior, finalMatcher);
             }
         }
     }
@@ -214,7 +200,7 @@ public class AbstractDungeonPatch {
             method = "generateRoomTypes"
     )
     public static class ModifyRoomChances {
-        public static float dungeonShopRoomChance, dungeonRestRoomChance, dungeonEliteRoomChance, dungeonEventRoomChance;
+        private static float dungeonShopRoomChance = 0.0F, dungeonRestRoomChance = 0.0F, dungeonEliteRoomChance = 0.0F, dungeonEventRoomChance = 0.0F;
 
         @SpirePrefixPatch
         public static void Prefix(ArrayList<AbstractRoom> roomList, int availableRoomCount,

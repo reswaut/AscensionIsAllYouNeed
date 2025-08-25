@@ -2,8 +2,11 @@ package ascensionisallyouneed.patches;
 
 import ascensionisallyouneed.AscensionIsAllYouNeed;
 import com.evacipated.cardcrawl.modthespire.lib.*;
+import com.evacipated.cardcrawl.modthespire.lib.Matcher.MethodCallMatcher;
+import com.evacipated.cardcrawl.modthespire.patcher.PatchingException;
 import com.megacrit.cardcrawl.helpers.Prefs;
 import com.megacrit.cardcrawl.screens.stats.CharStat;
+import javassist.CannotCompileException;
 import javassist.CtBehavior;
 
 public class CharStatPatch {
@@ -12,10 +15,7 @@ public class CharStatPatch {
             method = "incrementAscension"
     )
     public static class InsertIncrementAscension {
-        @SpireInsertPatch(
-                locator = Locator.class,
-                localvars = {"pref"}
-        )
+        @SpireInsertPatch(locator = Locator.class, localvars = "pref")
         public static void Insert(CharStat __instance, Prefs pref) {
             int derp = Math.max(pref.getInteger("ASCENSION_LEVEL", 1),
                     pref.getInteger(AscensionIsAllYouNeed.makeID("ASCENSION_LEVEL"), 1));
@@ -34,9 +34,9 @@ public class CharStatPatch {
 
         private static class Locator extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.MethodCallMatcher(Prefs.class, "getInteger");
-                return LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new MethodCallMatcher(Prefs.class, "getInteger");
+                return LineFinder.findInOrder(ctBehavior, finalMatcher);
             }
         }
     }

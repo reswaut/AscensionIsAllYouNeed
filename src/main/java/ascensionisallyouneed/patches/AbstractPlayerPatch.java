@@ -2,7 +2,10 @@ package ascensionisallyouneed.patches;
 
 import ascensionisallyouneed.AscensionIsAllYouNeed;
 import ascensionisallyouneed.ascensions.AbstractAscension;
+import ascensionisallyouneed.patches.MapRoomNodePatch.IsBurningField;
 import com.evacipated.cardcrawl.modthespire.lib.*;
+import com.evacipated.cardcrawl.modthespire.lib.Matcher.FieldAccessMatcher;
+import com.evacipated.cardcrawl.modthespire.patcher.PatchingException;
 import com.megacrit.cardcrawl.actions.common.ApplyPowerAction;
 import com.megacrit.cardcrawl.actions.unique.IncreaseMaxHpAction;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
@@ -14,6 +17,7 @@ import com.megacrit.cardcrawl.powers.MetallicizePower;
 import com.megacrit.cardcrawl.powers.RegenerateMonsterPower;
 import com.megacrit.cardcrawl.powers.StrengthPower;
 import com.megacrit.cardcrawl.rooms.AbstractRoom;
+import javassist.CannotCompileException;
 import javassist.CtBehavior;
 
 public class AbstractPlayerPatch {
@@ -43,7 +47,7 @@ public class AbstractPlayerPatch {
                 locator = Locator.class
         )
         public static void Insert(AbstractPlayer __instance) {
-            if (MapRoomNodePatch.IsBurningField.isBurning.get(AbstractDungeon.getCurrMapNode())) {
+            if (IsBurningField.isBurning.get(AbstractDungeon.getCurrMapNode())) {
                 AbstractRoom abstractRoom = AbstractDungeon.getCurrRoom();
                 boolean hasByrd = false;
                 for (AbstractMonster m : abstractRoom.monsters.monsters) {
@@ -74,15 +78,17 @@ public class AbstractPlayerPatch {
                             AbstractDungeon.actionManager.addToBottom(new ApplyPowerAction(m, m, new RegenerateMonsterPower(m, AbstractDungeon.actNum * 2 - 1), AbstractDungeon.actNum * 2 - 1));
                         }
                         break;
+                    default:
+                        throw new IllegalStateException("Unexpected value: " + modifierIndex);
                 }
             }
         }
 
         private static class Locator extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.FieldAccessMatcher(MapRoomNode.class, "hasEmeraldKey");
-                return LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new FieldAccessMatcher(MapRoomNode.class, "hasEmeraldKey");
+                return LineFinder.findInOrder(ctBehavior, finalMatcher);
             }
         }
     }

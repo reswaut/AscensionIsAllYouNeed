@@ -1,7 +1,7 @@
 package ascensionisallyouneed.ascensions;
 
-import com.megacrit.cardcrawl.potions.AbstractPotion;
+import com.megacrit.cardcrawl.potions.AbstractPotion.PotionRarity;
 
 public interface ModifyPotionTierRollAscension {
-    AbstractPotion.PotionRarity modifyPotionTier(int roll, int commonPotionChance, int uncommonPotionChance);
+    PotionRarity modifyPotionTier(int roll, int commonPotionChance, int uncommonPotionChance);
 }

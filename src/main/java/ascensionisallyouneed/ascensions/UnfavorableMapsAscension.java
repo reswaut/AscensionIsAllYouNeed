@@ -1,20 +1,21 @@
 package ascensionisallyouneed.ascensions;
 
 import ascensionisallyouneed.AscensionIsAllYouNeed;
-import ascensionisallyouneed.patches.MapRoomNodePatch;
+import ascensionisallyouneed.patches.MapRoomNodePatch.IsBurningField;
+import com.badlogic.gdx.graphics.Color;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
+import com.megacrit.cardcrawl.core.Settings;
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.map.MapRoomNode;
 import com.megacrit.cardcrawl.rooms.MonsterRoom;
 import com.megacrit.cardcrawl.rooms.MonsterRoomElite;
 
 import java.util.ArrayList;
 
-import static com.megacrit.cardcrawl.dungeons.AbstractDungeon.mapRng;
-
 public class UnfavorableMapsAscension extends AbstractAscension {
     public static final String ID = AscensionIsAllYouNeed.makeID(UnfavorableMapsAscension.class.getSimpleName());
-    public static final String[] TEXT = CardCrawlGame.languagePack.getUIString(ID).TEXT;
-    public static final String[] EXTRA_TEXT = CardCrawlGame.languagePack.getUIString(ID).EXTRA_TEXT;
+    private static final String[] TEXT = CardCrawlGame.languagePack.getUIString(ID).TEXT;
+    private static final String[] EXTRA_TEXT = CardCrawlGame.languagePack.getUIString(ID).EXTRA_TEXT;
 
     @Override
     public int getAscensionLevel() {
@@ -34,7 +35,7 @@ public class UnfavorableMapsAscension extends AbstractAscension {
             for (MapRoomNode node : mapRoomNodes) {
                 if (node.room instanceof MonsterRoom && !(node.room instanceof MonsterRoomElite)) {
                     ++width;
-                    if (MapRoomNodePatch.IsBurningField.isBurning.get(node)) {
+                    if (IsBurningField.isBurning.get(node)) {
                         ++burningCount;
 //                        MapRoomNodePatch.IsBurningField.isBurning.set(node, false);
                     }
@@ -57,7 +58,7 @@ public class UnfavorableMapsAscension extends AbstractAscension {
         int maxWidth = normalEnemyNodesByWidth.size() - 1;
         for (int i = 1; i < maxWidth; ++i) {
             for (int j = 1; j < normalEnemyNodesByWidth.get(i).size(); ++j) {
-                int index = mapRng.random(0, j);
+                int index = AbstractDungeon.mapRng.random(0, j);
                 if (index != j) {
                     MapRoomNode node = normalEnemyNodesByWidth.get(i).get(j);
                     normalEnemyNodesByWidth.get(i).set(j, normalEnemyNodesByWidth.get(i).get(index));
@@ -65,8 +66,8 @@ public class UnfavorableMapsAscension extends AbstractAscension {
                 }
             }
             for (MapRoomNode node : normalEnemyNodesByWidth.get(i)) {
-                if (mapRng.random(1, maxWidth) > i) {
-                    MapRoomNodePatch.IsBurningField.isBurning.set(node, true);
+                if (AbstractDungeon.mapRng.random(1, maxWidth) > i) {
+                    IsBurningField.isBurning.set(node, true);
                     burningCount -= 1;
                     if (burningCount <= 0) {
                         break;
@@ -97,5 +98,10 @@ public class UnfavorableMapsAscension extends AbstractAscension {
     @Override
     public float modifyEventRoomChance(float chance) {
         return chance * 1.2F;
+    }
+
+    @Override
+    public Color getColor() {
+        return Settings.GOLD_COLOR;
     }
 }

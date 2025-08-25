@@ -3,10 +3,12 @@ package ascensionisallyouneed.patches;
 import ascensionisallyouneed.AscensionIsAllYouNeed;
 import ascensionisallyouneed.ascensions.AbstractAscension;
 import com.evacipated.cardcrawl.modthespire.lib.*;
+import com.evacipated.cardcrawl.modthespire.lib.Matcher.MethodCallMatcher;
+import com.evacipated.cardcrawl.modthespire.patcher.PatchingException;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.rooms.AbstractRoom;
-import com.megacrit.cardcrawl.screens.charSelect.CharacterSelectScreen;
+import javassist.CannotCompileException;
 import javassist.CtBehavior;
 
 public class AbstractRoomPatch {
@@ -47,9 +49,9 @@ public class AbstractRoomPatch {
 
         private static class Locator extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.MethodCallMatcher(AbstractPlayer.class, "hasRelic");
-                return LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new MethodCallMatcher(AbstractPlayer.class, "hasRelic");
+                return LineFinder.findInOrder(ctBehavior, finalMatcher);
             }
         }
     }

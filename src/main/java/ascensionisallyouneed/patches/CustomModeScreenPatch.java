@@ -1,24 +1,18 @@
 package ascensionisallyouneed.patches;
 
 import ascensionisallyouneed.AscensionIsAllYouNeed;
-import ascensionisallyouneed.ascensions.AbstractAscension;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.evacipated.cardcrawl.modthespire.lib.*;
+import com.evacipated.cardcrawl.modthespire.lib.Matcher.FieldAccessMatcher;
+import com.evacipated.cardcrawl.modthespire.lib.Matcher.MethodCallMatcher;
+import com.evacipated.cardcrawl.modthespire.patcher.PatchingException;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.FontHelper;
 import com.megacrit.cardcrawl.helpers.Hitbox;
-import com.megacrit.cardcrawl.helpers.Prefs;
-import com.megacrit.cardcrawl.screens.charSelect.CharacterSelectScreen;
 import com.megacrit.cardcrawl.screens.custom.CustomModeScreen;
-import com.megacrit.cardcrawl.screens.stats.CharStat;
 import javassist.CannotCompileException;
 import javassist.CtBehavior;
-import javassist.expr.ExprEditor;
-import javassist.expr.FieldAccess;
-import javassist.expr.MethodCall;
-
-import java.util.Locale;
 
 public class CustomModeScreenPatch {
     @SpirePatch(
@@ -39,9 +33,9 @@ public class CustomModeScreenPatch {
 
         private static class Locator1 extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.FieldAccessMatcher(CustomModeScreen.class, "ascensionLevel");
-                int[] tmp = LineFinder.findAllInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new FieldAccessMatcher(CustomModeScreen.class, "ascensionLevel");
+                int[] tmp = LineFinder.findAllInOrder(ctBehavior, finalMatcher);
                 return new int[]{tmp[8]};
             }
         }
@@ -59,9 +53,9 @@ public class CustomModeScreenPatch {
 
         private static class Locator2 extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.FieldAccessMatcher(CustomModeScreen.class, "ascensionLevel");
-                int[] tmp = LineFinder.findAllInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new FieldAccessMatcher(CustomModeScreen.class, "ascensionLevel");
+                int[] tmp = LineFinder.findAllInOrder(ctBehavior, finalMatcher);
                 return new int[]{tmp[4]};
             }
         }
@@ -72,7 +66,7 @@ public class CustomModeScreenPatch {
             method = "renderAscension"
     )
     public static class InsertRenderAscension {
-        static int trueAscensionLevel = 0;
+        private static int trueAscensionLevel = 0;
         @SpireInsertPatch(
                 locator = Locator1.class
         )
@@ -83,9 +77,9 @@ public class CustomModeScreenPatch {
 
         private static class Locator1 extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.MethodCallMatcher(FontHelper.class, "renderSmartText");
-                int[] tmp = LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new MethodCallMatcher(FontHelper.class, "renderSmartText");
+                int[] tmp = LineFinder.findInOrder(ctBehavior, finalMatcher);
                 return new int[]{tmp[0] - 1};
             }
         }
@@ -112,9 +106,9 @@ public class CustomModeScreenPatch {
 
         private static class Locator2 extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.MethodCallMatcher(FontHelper.class, "renderSmartText");
-                int[] tmp = LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new MethodCallMatcher(FontHelper.class, "renderSmartText");
+                int[] tmp = LineFinder.findInOrder(ctBehavior, finalMatcher);
                 return new int[]{tmp[0] + 1};
             }
         }

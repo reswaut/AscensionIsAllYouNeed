@@ -1,5 +1,5 @@
 {
-  "ascensionisallyouneed:AscensionModeDescriptions": {
+  "${modID}:AbstractAscension": {
     "TEXT": [
       "[MISSING_ASCENSION_DESCRIPTION]",
       "(Max Level) "
@@ -8,9 +8,9 @@
       "20. Double Boss."
     ]
   },
-  "ascensionisallyouneed:Settings": {
+  "${modID}:ModConfigs": {
     "TEXT": [
-      "Legacy Ascender's Bane+",
+      "Legacy Ascension 30",
       "Displayed Ascension information in runs:",
       "Rare card probability reduction on Ascension 29+ (Default 5%):",
       "Additional cards Elites drop on Ascension 29+ (Default 0):",
@@ -21,78 +21,101 @@
       "Erase all Ascension progress saved by this Mod"
     ],
     "EXTRA_TEXT": [
-      "(%d more Level ...)",
-      "(%d more Levels ...)"
+      "${project.name}",
+      "${author}",
+      "${project.description}"
     ]
   },
-  "ascensionisallyouneed:PoorElitesAscension": {
+  "${modID}:TopPanelPatch": {
+    "TEXT": [
+      "(%d more Level ...)",
+      "(%d more Levels ...)"
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "${modID}:PoorElitesAscension": {
     "TEXT": [
       "Poor Elites."
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:DangerousEnemiesAscension": {
+  "${modID}:DangerousEnemiesAscension": {
     "TEXT": [
       "Some normal enemies are more dangerous."
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:FewerPotionsAscension": {
+  "${modID}:FewerPotionsAscension": {
     "TEXT": [
       "Potions appear less often."
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:LessRestHealAscension": {
+  "${modID}:LessRestHealAscension": {
     "TEXT": [
-      "Heal less when you rest."
+      "Heal less while resting."
     ],
     "EXTRA_TEXT": [
       "Heal for 80%% of your Max HP (%d).",
       "Heal for 24%% of your Max HP (%d)."
     ]
   },
-  "ascensionisallyouneed:LessStartingGoldAscension": {
+  "${modID}:LessStartingGoldAscension": {
     "TEXT": [
       "Start with less Gold."
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:UnfavorableMapsAscension": {
+  "${modID}:UnfavorableMapsAscension": {
     "TEXT": [
-      "Unfavorable Maps."
+      "Unfavorable maps."
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:FewerRareRelicsAscension": {
+  "${modID}:FewerRareRelicsAscension": {
     "TEXT": [
-      "Rare Relics appear less often."
+      "Rare relics appear less often."
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:FewerRarePotionsAscension": {
+  "${modID}:FewerRarePotionsAscension": {
     "TEXT": [
-      "Rare Potions appear less often."
+      "Rare potions appear less often."
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:FewerRareCardsAscension": {
+  "${modID}:FewerRareCardsAscension": {
     "TEXT": [
       "Rare cards appear less often."
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:ExtraCursedAscension": {
+  "${modID}:ExtraCursedAscension": {
     "TEXT": [
       "Start each run extra cursed."
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "${modID}:CostlyRemovalAscension": {
+    "TEXT": [
+      "Card Removal Service is more costly."
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "${modID}:BlightyAscension": {
+    "TEXT": [
+      "Choose a Blight."
     ],
     "EXTRA_TEXT": [
     ]

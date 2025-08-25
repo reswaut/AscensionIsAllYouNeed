@@ -1,18 +1,16 @@
 package ascensionisallyouneed.ascensions;
 
 import ascensionisallyouneed.AscensionIsAllYouNeed;
+import com.badlogic.gdx.graphics.Color;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.CardGroup;
 import com.megacrit.cardcrawl.cards.curses.AscendersBane;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
-import com.megacrit.cardcrawl.core.Settings;
-import com.megacrit.cardcrawl.rooms.AbstractRoom;
-import com.megacrit.cardcrawl.rooms.MonsterRoomElite;
 
 public class ExtraCursedAscension extends AbstractAscension {
     public static final String ID = AscensionIsAllYouNeed.makeID(ExtraCursedAscension.class.getSimpleName());
-    public static final String[] TEXT = CardCrawlGame.languagePack.getUIString(ID).TEXT;
-    public static final String[] EXTRA_TEXT = CardCrawlGame.languagePack.getUIString(ID).EXTRA_TEXT;
+    private static final String[] TEXT = CardCrawlGame.languagePack.getUIString(ID).TEXT;
+    private static final String[] EXTRA_TEXT = CardCrawlGame.languagePack.getUIString(ID).EXTRA_TEXT;
 
     @Override
     public int getAscensionLevel() {
@@ -30,5 +28,10 @@ public class ExtraCursedAscension extends AbstractAscension {
                 card.upgrade();
             }
         }
+    }
+
+    @Override
+    public Color getColor() {
+        return getChangingColor();
     }
 }

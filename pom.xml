@@ -18,8 +18,8 @@
     </properties>
 
     <name>Ascension is All you Need</name>
-    <version>0.2.4</version>
-    <description>Adds 10 new Ascension Levels beyond Level 20.\n在进阶20基础上新增10个更高进阶。</description>
+    <version>0.3.0</version>
+    <description>Adds 10 new Ascension levels beyond Level 20.\n在进阶20基础上新增10个更高进阶。</description>
 
     <groupId>${modID}</groupId>
     <artifactId>${modID}</artifactId>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>basemod</groupId>
             <artifactId>basemod</artifactId>
-            <version>5.55.3</version>
+            <version>5.56.0</version>
             <scope>system</scope>
             <systemPath>${steam.path}/workshop/content/646570/1605833019/BaseMod.jar</systemPath>
         </dependency>
@@ -103,33 +103,6 @@
                 <version>3.1.0</version>
                 <executions>
                     <execution>
-                        <id>description</id>
-                        <phase>prepare-package</phase>
-                        <configuration>
-                            <target>
-                                <property name="tempDescription" value="${project.description}"/>
-                                <loadresource property="filteredDescription">
-                                    <propertyresource name="tempDescription"/>
-                                    <filterchain>
-                                        <tokenfilter>
-                                            <filetokenizer/>
-                                            <replaceregex pattern="(\s*\n\s*)" replace="\\\\n" flags="g"/>
-                                            <replaceregex pattern='((\\\\)*)(\\?")' replace='\1\\\\"' flags="g"/>
-                                        </tokenfilter>
-                                    </filterchain>
-                                </loadresource>
-
-                                <!--suppress UnresolvedMavenProperty -->
-                                <replace file="target/classes/ModTheSpire.json" value="${filteredDescription}">
-                                    <replacetoken>!(project.description)</replacetoken>
-                                </replace>
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                    <execution>
                         <id>copy</id>
                         <phase>package</phase>
                         <configuration>
@@ -149,7 +122,7 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
-                <excludes> <!-- These files won't not be filtered. -->
+                <excludes> <!-- These files won't be filtered. -->
                     <exclude>ModTheSpire.json</exclude>
                     <exclude>**/*.json</exclude>
                 </excludes>
@@ -175,56 +148,6 @@
                 <steam.path>${steam.windows}</steam.path>
                 <sts.path>/common/SlayTheSpire/desktop-1.0.jar</sts.path>
             </properties>
-        </profile>
-
-        <profile>
-            <id>linux</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-                <os>
-                    <family>unix</family>
-                </os>
-            </activation>
-            <properties>
-                <steam.path>${steam.linux}</steam.path>
-                <sts.path>/common/SlayTheSpire/desktop-1.0.jar</sts.path>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>mac</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-                <os>
-                    <family>mac</family>
-                </os>
-            </activation>
-            <properties>
-                <steam.path>${steam.mac}</steam.path>
-                <sts.path>/common/SlayTheSpire/SlayTheSpire.app/Contents/Resources/desktop-1.0.jar</sts.path>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>3.1.0</version>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <configuration>
-                                    <target>
-                                        <copy file="target/${project.artifactId}.jar" tofile="${steam.path}/common/SlayTheSpire/SlayTheSpire.app/Contents/Resources/mods/${project.artifactId}.jar"/>
-                                    </target>
-                                </configuration>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
         </profile>
     </profiles>
 </project>

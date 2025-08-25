@@ -1,5 +1,5 @@
 {
-  "ascensionisallyouneed:AscensionModeDescriptions": {
+  "${modID}:AbstractAscension": {
     "TEXT": [
       "[MISSING_ASCENSION_DESCRIPTION]",
       "（最大等级）"
@@ -8,9 +8,9 @@
       "20. 双重Boss。"
     ]
   },
-  "ascensionisallyouneed:Settings": {
+  "${modID}:ModConfigs": {
     "TEXT": [
-      "过去的进阶之灾+",
+      "过去的进阶30",
       "游戏中展示的进阶信息：",
       "进阶29+稀有牌概率减少（默认5%）：",
       "进阶29+精英敌人额外掉落卡牌（默认0）：",
@@ -21,32 +21,41 @@
       "删除本Mod保存的所有进阶进度"
     ],
     "EXTRA_TEXT": [
-      "（已省略%d个等级……）",
-      "（已省略%d个等级……）"
+      "${project.name}",
+      "${author}",
+      "${project.description}"
     ]
   },
-  "ascensionisallyouneed:PoorElitesAscension": {
+  "${modID}:TopPanelPatch": {
+    "TEXT": [
+      "（已省略%d个等级……）",
+      "（已省略%d个等级……）"
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "${modID}:PoorElitesAscension": {
     "TEXT": [
       "精英变穷。"
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:DangerousEnemiesAscension": {
+  "${modID}:DangerousEnemiesAscension": {
     "TEXT": [
       "有些普通敌人更加危险。"
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:FewerPotionsAscension": {
+  "${modID}:FewerPotionsAscension": {
     "TEXT": [
       "药水出现频率下降。"
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:LessRestHealAscension": {
+  "${modID}:LessRestHealAscension": {
     "TEXT": [
       "休息时生命恢复减少。"
     ],
@@ -55,44 +64,58 @@
       "回复你最大生命的 24%% (%d)。"
     ]
   },
-  "ascensionisallyouneed:LessStartingGoldAscension": {
+  "${modID}:LessStartingGoldAscension": {
     "TEXT": [
       "初始拥有更少金币。"
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:UnfavorableMapsAscension": {
+  "${modID}:UnfavorableMapsAscension": {
     "TEXT": [
       "地图变得更加不利。"
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:FewerRareRelicsAscension": {
+  "${modID}:FewerRareRelicsAscension": {
     "TEXT": [
       "稀有遗物出现频率下降。"
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:FewerRarePotionsAscension": {
+  "${modID}:FewerRarePotionsAscension": {
     "TEXT": [
       "稀有药水出现频率下降。"
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:FewerRareCardsAscension": {
+  "${modID}:FewerRareCardsAscension": {
     "TEXT": [
       "稀有卡牌出现频率下降。"
     ],
     "EXTRA_TEXT": [
     ]
   },
-  "ascensionisallyouneed:ExtraCursedAscension": {
+  "${modID}:ExtraCursedAscension": {
     "TEXT": [
       "初始受到的诅咒升级。"
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "${modID}:CostlyRemovalAscension": {
+    "TEXT": [
+      "卡牌移除服务要价更高。"
+    ],
+    "EXTRA_TEXT": [
+    ]
+  },
+  "${modID}:BlightyAscension": {
+    "TEXT": [
+      "选择一项荒疫。"
     ],
     "EXTRA_TEXT": [
     ]

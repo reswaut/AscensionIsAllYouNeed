@@ -1,14 +1,14 @@
 package ascensionisallyouneed.ascensions;
 
 import ascensionisallyouneed.AscensionIsAllYouNeed;
+import com.badlogic.gdx.graphics.Color;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
-import com.megacrit.cardcrawl.localization.LocalizedStrings;
-import com.megacrit.cardcrawl.rooms.AbstractRoom;
+import com.megacrit.cardcrawl.core.Settings;
 
 public class LessRestHealAscension extends AbstractAscension implements ModifyRestHealAmtAscension {
     public static final String ID = AscensionIsAllYouNeed.makeID(LessRestHealAscension.class.getSimpleName());
-    public static final String[] TEXT = CardCrawlGame.languagePack.getUIString(ID).TEXT;
-    public static final String[] EXTRA_TEXT = CardCrawlGame.languagePack.getUIString(ID).EXTRA_TEXT;
+    private static final String[] TEXT = CardCrawlGame.languagePack.getUIString(ID).TEXT;
+    private static final String[] EXTRA_TEXT = CardCrawlGame.languagePack.getUIString(ID).EXTRA_TEXT;
 
     @Override
     public int getAscensionLevel() {
@@ -30,5 +30,10 @@ public class LessRestHealAscension extends AbstractAscension implements ModifyRe
             return String.format(EXTRA_TEXT[0], healAmt);
         }
         return String.format(EXTRA_TEXT[1], healAmt);
+    }
+
+    @Override
+    public Color getColor() {
+        return Settings.GOLD_COLOR;
     }
 }

@@ -2,10 +2,13 @@ package ascensionisallyouneed.patches;
 
 import ascensionisallyouneed.AscensionIsAllYouNeed;
 import com.evacipated.cardcrawl.modthespire.lib.*;
+import com.evacipated.cardcrawl.modthespire.lib.Matcher.FieldAccessMatcher;
+import com.evacipated.cardcrawl.modthespire.patcher.PatchingException;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.helpers.Prefs;
 import com.megacrit.cardcrawl.screens.charSelect.CharacterOption;
 import com.megacrit.cardcrawl.screens.charSelect.CharacterSelectScreen;
+import javassist.CannotCompileException;
 import javassist.CtBehavior;
 
 public class CharacterOptionPatch {
@@ -46,9 +49,9 @@ public class CharacterOptionPatch {
 
         private static class Locator extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.FieldAccessMatcher(CharacterSelectScreen.class, "ascLevelInfoString");
-                int[] tmp = LineFinder.findAllInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new FieldAccessMatcher(CharacterSelectScreen.class, "ascLevelInfoString");
+                int[] tmp = LineFinder.findAllInOrder(ctBehavior, finalMatcher);
                 return new int[]{tmp[0] - 1};
             }
         }
@@ -69,9 +72,9 @@ public class CharacterOptionPatch {
 
         private static class Locator extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.FieldAccessMatcher(CharacterSelectScreen.class, "ascLevelInfoString");
-                return LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new FieldAccessMatcher(CharacterSelectScreen.class, "ascLevelInfoString");
+                return LineFinder.findInOrder(ctBehavior, finalMatcher);
             }
         }
     }
@@ -91,9 +94,9 @@ public class CharacterOptionPatch {
 
         private static class Locator extends SpireInsertLocator {
             @Override
-            public int[] Locate(CtBehavior ctMethodToPatch) throws Exception {
-                Matcher finalMatcher = new Matcher.FieldAccessMatcher(CharacterSelectScreen.class, "ascLevelInfoString");
-                return LineFinder.findInOrder(ctMethodToPatch, finalMatcher);
+            public int[] Locate(CtBehavior ctBehavior) throws CannotCompileException, PatchingException {
+                Matcher finalMatcher = new FieldAccessMatcher(CharacterSelectScreen.class, "ascLevelInfoString");
+                return LineFinder.findInOrder(ctBehavior, finalMatcher);
             }
         }
     }

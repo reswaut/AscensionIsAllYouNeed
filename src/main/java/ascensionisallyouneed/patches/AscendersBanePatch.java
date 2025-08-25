@@ -19,10 +19,10 @@ public class AscendersBanePatch {
         @Override
         public void onDrawn(AbstractCard card) {
             if (card instanceof AscendersBane) {
-                if (AscensionIsAllYouNeed.loseEnergy) {
-                    this.addToBot(new LoseEnergyAction(1));
+                if (AscensionIsAllYouNeed.modConfigs.legacyA30) {
+                    addToBot(new LoseEnergyAction(1));
                 } else {
-                    this.addToBot(new LoseHPAction(AbstractDungeon.player, AbstractDungeon.player, 1));
+                    addToBot(new LoseHPAction(AbstractDungeon.player, AbstractDungeon.player, 1));
                 }
             }
         }
@@ -45,7 +45,7 @@ public class AscendersBanePatch {
         public static void Prefix(AscendersBane __instance) {
             if (!__instance.upgraded) {
                 ReflectionHacks.privateMethod(AbstractCard.class, "upgradeName").invoke(__instance);
-                if (AscensionIsAllYouNeed.loseEnergy) {
+                if (AscensionIsAllYouNeed.modConfigs.legacyA30) {
                     __instance.rawDescription = cardStrings.EXTENDED_DESCRIPTION[0];
                 } else {
                     __instance.rawDescription = cardStrings.UPGRADE_DESCRIPTION;
