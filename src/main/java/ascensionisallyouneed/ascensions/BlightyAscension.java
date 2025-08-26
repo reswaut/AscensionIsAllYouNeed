@@ -46,7 +46,7 @@ public class BlightyAscension extends AbstractAscension {
     }
 
     private static boolean noBlight() {
-        return AbstractDungeon.actNum != 3 || AscensionIsAllYouNeed.ascensions.stream().noneMatch(ascension -> ascension.getAscensionLevel() >= AbstractDungeon.ascensionLevel && ascension instanceof BlightyAscension);
+        return AbstractDungeon.actNum != 3 || AscensionIsAllYouNeed.ascensions.stream().noneMatch(ascension -> AbstractDungeon.ascensionLevel >= ascension.getAscensionLevel() && ascension instanceof BlightyAscension);
     }
 
     @Override

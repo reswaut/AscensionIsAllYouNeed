@@ -18,8 +18,8 @@
     </properties>
 
     <name>Ascension is All you Need</name>
-    <version>0.3.0</version>
-    <description>Adds 10 new Ascension levels beyond Level 20.\n在进阶20基础上新增10个更高进阶。</description>
+    <version>0.3.1</version>
+    <description>Adds 12 new Ascension levels beyond Level 20.\n在进阶20基础上新增12个更高进阶。</description>
 
     <groupId>${modID}</groupId>
     <artifactId>${modID}</artifactId>
