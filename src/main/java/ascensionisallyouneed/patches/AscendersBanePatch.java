@@ -15,21 +15,24 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.localization.CardStrings;
 
 public class AscendersBanePatch {
-    public static class LoseEnergyOrHPOnDrawnModifier extends AbstractCardModifier {
+    public static class UpgradeAscendersBaneModifier extends AbstractCardModifier {
         @Override
         public void onDrawn(AbstractCard card) {
-            if (card instanceof AscendersBane) {
-                if (AscensionIsAllYouNeed.modConfigs.legacyA30) {
-                    addToBot(new LoseEnergyAction(1));
-                } else {
-                    addToBot(new LoseHPAction(AbstractDungeon.player, AbstractDungeon.player, 1));
-                }
+            if (card instanceof AscendersBane && AscensionIsAllYouNeed.modConfigs.legacyA30) {
+                addToBot(new LoseEnergyAction(1));
+            }
+        }
+
+        @Override
+        public void onExhausted(AbstractCard card) {
+            if (card instanceof AscendersBane && !AscensionIsAllYouNeed.modConfigs.legacyA30) {
+                addToBot(new LoseHPAction(AbstractDungeon.player, AbstractDungeon.player, 1));
             }
         }
 
         @Override
         public AbstractCardModifier makeCopy() {
-            return new LoseEnergyOrHPOnDrawnModifier();
+            return new UpgradeAscendersBaneModifier();
         }
     }
 
@@ -51,7 +54,7 @@ public class AscendersBanePatch {
                     __instance.rawDescription = cardStrings.UPGRADE_DESCRIPTION;
                 }
                 __instance.initializeDescription();
-                CardModifierManager.addModifier(__instance, new LoseEnergyOrHPOnDrawnModifier());
+                CardModifierManager.addModifier(__instance, new UpgradeAscendersBaneModifier());
             }
         }
     }

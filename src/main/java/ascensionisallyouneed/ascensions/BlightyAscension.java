@@ -21,29 +21,18 @@ import javassist.CannotCompileException;
 import javassist.CtBehavior;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
 
 public class BlightyAscension extends AbstractAscension {
     public static final String ID = AscensionIsAllYouNeed.makeID(BlightyAscension.class.getSimpleName());
     private static final String[] TEXT = CardCrawlGame.languagePack.getUIString(ID).TEXT;
     private static final String[] EXTRA_TEXT = CardCrawlGame.languagePack.getUIString(ID).EXTRA_TEXT;
-    private static final List<String> easyBlights, hardBlights;
-
-    static {
-        easyBlights = new ArrayList<>(5);
-        easyBlights.add(Accursed.ID);
-        easyBlights.add(AncientAugmentation.ID);
-        easyBlights.add(Durian.ID);
-        easyBlights.add(Hauntings.ID);
-        easyBlights.add(TimeMaze.ID);
-
-        hardBlights = new ArrayList<>(4);
-        hardBlights.add(GrotesqueTrophy.ID);
-        hardBlights.add(Scatterbrain.ID);
-        hardBlights.add(TwistingMind.ID);
-        hardBlights.add(VoidEssence.ID);
-    }
+    private static final List<List<String>> blightTiers = Arrays.asList(
+            Arrays.asList(AncientAugmentation.ID, Hauntings.ID, TimeMaze.ID),
+            Arrays.asList(Accursed.ID, Durian.ID, Scatterbrain.ID),
+            Arrays.asList(GrotesqueTrophy.ID, TwistingMind.ID, VoidEssence.ID)
+    );
 
     private static boolean noBlight() {
         return AbstractDungeon.actNum != 3 || AscensionIsAllYouNeed.ascensions.stream().noneMatch(ascension -> AbstractDungeon.ascensionLevel >= ascension.getAscensionLevel() && ascension instanceof BlightyAscension);
@@ -74,18 +63,11 @@ public class BlightyAscension extends AbstractAscension {
             if (noBlight()) {
                 return;
             }
-            int first = AbstractDungeon.relicRng.random(4);
-            int second = AbstractDungeon.relicRng.random(3);
-            if (second >= first) {
-                second += 1;
-            }
-            Collection<String> blights = new ArrayList<>(3);
-            blights.add(hardBlights.get(AbstractDungeon.relicRng.random(3)));
-            blights.add(easyBlights.get(first));
-            blights.add(easyBlights.get(second));
             __instance.blights.clear();
-            for (String s : blights) {
-                __instance.blights.add(BlightHelper.getBlight(s));
+            List<String> blights = new ArrayList<>(7);
+            for (int i = 0; i < 3; ++i) {
+                blights.addAll(blightTiers.get(i));
+                __instance.blights.add(BlightHelper.getBlight(blights.remove(AbstractDungeon.relicRng.random(blights.size() - 1))));
             }
         }
     }

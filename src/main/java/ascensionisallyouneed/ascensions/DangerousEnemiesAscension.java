@@ -59,6 +59,7 @@ public class DangerousEnemiesAscension extends AbstractAscension {
     @Override
     public int modifyPotionChance(AbstractRoom room, int chance) {
         if (IsBurningField.isBurning.get(AbstractDungeon.getCurrMapNode())) {
+            AbstractRoom.blizzardPotionMod += 10;
             return 120;
         }
         return chance;

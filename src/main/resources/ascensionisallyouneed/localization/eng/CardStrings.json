@@ -2,7 +2,7 @@
   "${modID}:AscendersBane": {
     "NAME": "Ascender's Bane",
     "DESCRIPTION": "Unplayable. NL Ethereal. NL Cannot be removed from your deck.",
-    "UPGRADE_DESCRIPTION": "Unplayable. NL Ethereal. NL Whenever this card is drawn, lose 1 HP. NL Cannot be removed from your deck.",
+    "UPGRADE_DESCRIPTION": "Unplayable. NL Ethereal. NL If this card is Exhausted, lose 1 HP. NL Cannot be removed from your deck.",
     "EXTENDED_DESCRIPTION": [
       "Unplayable. NL Ethereal. NL Whenever this card is drawn, lose 1 Energy. NL Cannot be removed from your deck."
     ]
